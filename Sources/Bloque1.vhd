@@ -13,9 +13,9 @@ entity Bloque1 is
     switches       : in  std_logic_vector(3 downto 0);
     freq_div_fin   : in  std_logic;
     freq_div_start : out std_logic;  -- Va al reset del FreqDiv: 1=reset(parado), 0=contando
-    Fin            : out std_logic;
+    fin_fase            : out std_logic;
     seven_segments : out std_logic_vector(19 downto 0);
-    Num            : out std_logic_vector(3 downto 0)
+    num_jug            : out std_logic_vector(3 downto 0)
   );
 end entity;
 
@@ -52,8 +52,8 @@ begin
   begin
     -- reset=1 => apagado
     if reset = '1' then
-      Num <= "0000";
-      Fin <= '0';
+      num_jug <= "0000";
+      fin_fase <= '0';
       started <= '0';
 
       conf_prev  <= '0';
@@ -66,7 +66,7 @@ begin
 
     elsif (clk'event and clk = '1') then
       -- por defecto
-      Fin <= '0';
+      fin_fase <= '0';
 
       -- detector de flanco (pulsación) CONFIRM
       conf_pulse <= btn_confirm and (not conf_prev);
@@ -87,7 +87,7 @@ begin
       if started = '0' then
         if conf_pulse = '1' and
            (switches = "0010" or switches = "0011" or switches = "0100") then
-          Num <= switches;
+          num_jug <= switches;
           started <= '1';
           freq_div_start <= '0';  -- empezamos a contar ya
         end if;
@@ -97,7 +97,7 @@ begin
       if started = '1' then
         -- Fin por tiempo (freq_div_fin) o por CONTINUE (salto de los 5s)
         if freq_div_fin = '1' or cont_pulse = '1' then
-          Fin <= '1';
+          fin_fase <= '1';
           started <= '0';
           freq_div_start <= '1';  -- paramos/reseteamos divisor inmediatamente
         end if;

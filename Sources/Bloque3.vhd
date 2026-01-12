@@ -8,8 +8,8 @@ entity Bloque3 is
         reset   : in  std_logic;
         
         num_jug     : in  std_logic_vector (3 downto 0); -- "0010"(2), "0011"(3), "0100"(4)
-        num_ronda       : in  unsigned (7 downto 0); -- Ronda actual
-        rng_in         : in  std_logic_vector (5 downto 0);
+        num_ronda   : in  unsigned (7 downto 0); -- Ronda actual
+        rng_in      : in  std_logic_vector (5 downto 0);
         
         switches    : in  std_logic_vector (3 downto 0);
         btn_continue    : in  std_logic;
