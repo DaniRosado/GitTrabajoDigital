@@ -5,9 +5,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity DecoderControler is
     port(clk    :   in  std_logic;
          reset  :   in  std_logic;
-         Input  :   in  std_logic_vector(19 downto 0); 
-         Output :   out std_logic_vector( 6 downto 0);
-         Selector :   out  std_logic_vector( 3 downto 0)
+
+         mensaje_in  : in  std_logic_vector(19 downto 0); 
+         mensaje_out : out std_logic_vector( 6 downto 0);
+         selector_7s : out std_logic_vector( 3 downto 0)
          );
 end entity;
 
@@ -31,22 +32,22 @@ begin
 
 Decoder3: Decoder7s
     port map(
-        BCD => Input(19 downto 15),
+        BCD => mensaje_in(19 downto 15),
         segments7  => Output3
     );
 Decoder2: Decoder7s
     port map(
-        BCD => Input(14 downto 10),
+        BCD => mensaje_in(14 downto 10),
         segments7  => Output2
     );
 Decoder1: Decoder7s
     port map(
-        BCD => Input(9 downto 5),
+        BCD => mensaje_in(9 downto 5),
         segments7  => Output1
     );
 Decoder0: Decoder7s
     port map(
-        BCD => Input(4 downto 0),
+        BCD => mensaje_in(4 downto 0),
         segments7  => Output0
     );
 
@@ -62,16 +63,16 @@ begin
                 counter <= 0;
                 case Selectors is
                     when "0001" =>
-                        Output <= Output0;
+                        mensaje_out <= Output0;
                         Selectors <= "0010";
                     when "0010" =>
-                        Output <= Output1;
+                        mensaje_out <= Output1;
                         Selectors <= "0100";
                     when "0100" =>
-                        Output <= Output2;
+                        mensaje_out <= Output2;
                         Selectors <= "1000";
                     when others =>
-                        Output <= Output3;
+                        mensaje_out <= Output3;
                         Selectors <= "0001";
                 end case;
             else
@@ -80,7 +81,7 @@ begin
         end if;
     end if;
 end process;
-Selector <= Selectors;
+selector_7s <= Selectors;
 
 
 end architecture;

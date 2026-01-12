@@ -7,8 +7,8 @@ entity SeleccionJugadores is
     clk            : in  std_logic;
     reset          : in  std_logic;  -- 1 = apagado (estado inicial), 0 = funcionando
 
-    btn_confirm        : in  std_logic;  -- boton CONFIRMACION (elige nº jugadores)
-    btn_continue       : in  std_logic;  -- boton CONTINUAR (salta los 5s)
+    confirm        : in  std_logic;  -- boton CONFIRMACION (elige nº jugadores)
+    continue       : in  std_logic;  -- boton CONTINUAR (salta los 5s)
 
     switches       : in  std_logic_vector(3 downto 0);
     freq_div_fin   : in  std_logic;
@@ -17,7 +17,7 @@ entity SeleccionJugadores is
     seven_segments : out std_logic_vector(19 downto 0);
     Num            : out std_logic_vector(3 downto 0)
   );
-end entity;
+end SeleccionJugadores;
 
 architecture Behavioral of SeleccionJugadores is
 
@@ -69,12 +69,12 @@ begin
       Fin <= '0';
 
       -- detector de flanco (pulsación) CONFIRM
-      conf_pulse <= btn_confirm and (not conf_prev);
-      conf_prev  <= btn_confirm;
+      conf_pulse <= confirm and (not conf_prev);
+      conf_prev  <= confirm;
 
       -- detector de flanco (pulsación) CONTINUE
-      cont_pulse <= btn_continue and (not cont_prev);
-      cont_prev  <= btn_continue;
+      cont_pulse <= continue and (not cont_prev);
+      cont_prev  <= continue;
 
       -- por defecto: mantener el reset del divisor según started
       if started = '1' then

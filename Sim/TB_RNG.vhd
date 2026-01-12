@@ -8,7 +8,7 @@ end entity;
 
 architecture Behavioral of TB_RNG is
     -- Component Declaration for the Unit Under Test (UUT)
-    component RNG
+    component RNG_Generator
     Port ( clk     : in  STD_LOGIC;
            reset   : in  STD_LOGIC; --Reset de la placa
            random_number : out STD_LOGIC_VECTOR (5 downto 0));
@@ -25,7 +25,7 @@ architecture Behavioral of TB_RNG is
     constant clk_period : time := 10 ns;
 begin
     -- Instantiate the Unit Under Test (UUT)
-    uut: RNG
+    uut: RNG_Generator
     Port map (
           clk => clk_tb,
           reset => reset_tb,

@@ -66,7 +66,7 @@ architecture Behavioral of TB_Bloque3_Extended is
               Output :  out std_logic);
     end component;
 
-    component RNG is
+    component RNG_Generator is
         Port (clk     : in  STD_LOGIC;
               reset   : in  STD_LOGIC; --Reset de la placa
               random_number : out STD_LOGIC_VECTOR (5 downto 0));
@@ -127,7 +127,7 @@ begin
             filtrado   => confirmPressed_tb
         );
         
-    RNG_inst: RNG
+    RNG_inst: RNG_Generator
         port map (
             clk           => clk_tb,
             reset         => '0',

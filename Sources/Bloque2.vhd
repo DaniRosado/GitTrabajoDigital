@@ -11,8 +11,8 @@ entity Bloque2 is
         NUM_RONDA     : in  unsigned (7 downto 0); -- Ronda actual
         ALEATORIO_IN  : in  std_logic_vector (5 downto 0);
         SWITCHES      : in  std_logic_vector (3 downto 0);
-        BTN_CONFIRM   : in  std_logic;
-        BTN_CONTINUAR : in  std_logic;
+        btn_confirm   : in  std_logic;
+        btn_continuar : in  std_logic;
 
         freqdiv_end   : in  std_logic;                     -- Pulso de fin de 5s
 
@@ -78,7 +78,7 @@ begin
                                 state <= VALIDAR;
                             end if;
 
-                        elsif BTN_CONFIRM = '1' then
+                        elsif btn_confirm = '1' then
                             current_stone <= to_integer(unsigned(SWITCHES));
                             state <= VALIDAR;
                         end if;
@@ -105,7 +105,7 @@ begin
                         end if;
 
                         -- Espera fin de 5s o botón continuar
-                        if freqdiv_end = '1' or (BTN_CONTINUAR = '1' and is_valid = '1') then
+                        if freqdiv_end = '1' or (btn_continuar = '1' and is_valid = '1') then
                                 freqdiv_reset <= '1';
                                 if is_valid = '1' then
                                     -- Guardar en registro interno

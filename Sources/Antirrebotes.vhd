@@ -6,6 +6,7 @@ use IEEE.numeric_std.all;
 entity Antirrebotes is
 Port (clk      : in  std_logic;
       reset    : in  std_logic;
+      
       boton    : in  std_logic;
       filtrado : out std_logic);
 end entity;

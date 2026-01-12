@@ -6,8 +6,9 @@ entity Bloque3 is
     port (
         clk           : in  std_logic;
         reset         : in  std_logic;
-        continue      : in  std_logic;
-        confirm       : in  std_logic;
+        
+        btn_continue      : in  std_logic;
+        btn_confirm       : in  std_logic;
         switches      : in  std_logic_vector (3 downto 0);
         player_number : in  std_logic_vector (3 downto 0); -- "0010"(2), "0011"(3), "0100"(4)
         freqdiv_end   : in  std_logic;                     -- Pulso de fin de 5s
@@ -107,7 +108,7 @@ begin
                                 is_valid <= '1';
                                 state <= PRINT_RESULTADO;
                             end if;
-                        elsif confirm = '1' then
+                        elsif btn_confirm = '1' then
                             current_bet <= to_integer(unsigned(switches));
                             state <= VALIDAR;
                         end if;
@@ -141,7 +142,7 @@ begin
                         end if;
 
                         -- Espera fin de 5s o botón continuar
-                        if freqdiv_end = '1' or continue = '1' then
+                        if freqdiv_end = '1' or btn_continue = '1' then
                             freqdiv_reset <= '1';
                             if is_valid = '1' then
                                 -- Guardar en registro externo

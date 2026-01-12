@@ -6,7 +6,8 @@ use IEEE.NUMERIC_STD.ALL;
 entity Freqdiv is
     Port (clk    :  in  std_logic;
           reset  :  in  std_logic;
-          Output :  out std_logic);
+          
+          freqdiv_out :  out std_logic);
 end Freqdiv;
 
 architecture Behavioral of Freqdiv is
@@ -21,14 +22,14 @@ begin
     begin
         if reset = '1' then
             counter <= 0;
-            Output <= '0';
+            freqdiv_out <= '0';
         elsif clk'event and clk = '1' then
             if counter < max_count -1 then
                 counter <= counter + 1;
-                Output <= '0';
+                freqdiv_out <= '0';
             else
                 counter <= 0;
-                Output <= '1';
+                freqdiv_out <= '1';
             end if;
         end if;
     end process;

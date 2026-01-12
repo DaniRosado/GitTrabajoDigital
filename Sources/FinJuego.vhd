@@ -6,6 +6,7 @@ entity FinJuego is
   port(
     clk           : in  std_logic;
     reset         : in  std_logic;
+    
     Num_jugadores : in  std_logic_vector(3 downto 0);
     p1            : in  std_logic_vector(1 downto 0);
     p2            : in  std_logic_vector(1 downto 0);

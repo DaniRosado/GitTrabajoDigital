@@ -10,6 +10,16 @@ set_property -dict {PACKAGE_PIN P14 IOSTANDARD LVCMOS33} [get_ports {leds_4[1]}]
 set_property -dict {PACKAGE_PIN N16 IOSTANDARD LVCMOS33} [get_ports {leds_4[2]}]
 set_property -dict {PACKAGE_PIN M14 IOSTANDARD LVCMOS33} [get_ports {leds_4[3]}]
 
+#LEDs (placa negra)
+set_property -dict { PACKAGE_PIN W18 IOSTANDARD LVCMOS33}  [get_ports {leds_8[0]}];
+set_property -dict { PACKAGE_PIN W19 IOSTANDARD LVCMOS33}  [get_ports {leds_8[1]}];
+set_property -dict { PACKAGE_PIN Y18 IOSTANDARD LVCMOS33}  [get_ports {leds_8[2]}]; 
+set_property -dict { PACKAGE_PIN U7  IOSTANDARD LVCMOS33 } [get_ports {leds_8[3]}]; 
+set_property -dict { PACKAGE_PIN V7  IOSTANDARD LVCMOS33 } [get_ports {leds_8[4]}];
+set_property -dict { PACKAGE_PIN U8  IOSTANDARD LVCMOS33 } [get_ports {leds_8[5]}];
+set_property -dict { PACKAGE_PIN V8  IOSTANDARD LVCMOS33 } [get_ports {leds_8[6]}]; 
+set_property -dict { PACKAGE_PIN V10 IOSTANDARD LVCMOS33 } [get_ports {leds_8[7]}]; 
+
 ## Botones (placa rosa BTN0-BTN3)
 set_property -dict {PACKAGE_PIN D19 IOSTANDARD LVCMOS33} [get_ports {botones[0]}]
 set_property -dict {PACKAGE_PIN D20 IOSTANDARD LVCMOS33} [get_ports {botones[1]}]
@@ -30,16 +40,6 @@ set_property -dict { PACKAGE_PIN Y6    IOSTANDARD LVCMOS33 } [get_ports { segmen
 set_property -dict { PACKAGE_PIN W6    IOSTANDARD LVCMOS33 } [get_ports { segments[4] }]; #--23 segment 4 (c)
 set_property -dict { PACKAGE_PIN F19   IOSTANDARD LVCMOS33 } [get_ports { segments[5] }]; #--8  segment 5 (b)
 set_property -dict { PACKAGE_PIN Y9    IOSTANDARD LVCMOS33 } [get_ports { segments[6] }]; #--21 segment 6 (a)
-
-#LEDs (placa negra)
-set_property -dict { PACKAGE_PIN W18 IOSTANDARD LVCMOS33}  [get_ports {leds_8[0]}];
-set_property -dict { PACKAGE_PIN W19 IOSTANDARD LVCMOS33}  [get_ports {leds_8[1]}];
-set_property -dict { PACKAGE_PIN Y18 IOSTANDARD LVCMOS33}  [get_ports {leds_8[2]}]; 
-set_property -dict { PACKAGE_PIN U7  IOSTANDARD LVCMOS33 } [get_ports {leds_8[3]}]; 
-set_property -dict { PACKAGE_PIN V7  IOSTANDARD LVCMOS33 } [get_ports {leds_8[4]}];
-set_property -dict { PACKAGE_PIN U8  IOSTANDARD LVCMOS33 } [get_ports {leds_8[5]}];
-set_property -dict { PACKAGE_PIN V8  IOSTANDARD LVCMOS33 } [get_ports {leds_8[6]}]; 
-set_property -dict { PACKAGE_PIN V10 IOSTANDARD LVCMOS33 } [get_ports {leds_8[7]}]; 
 
 #SWITCHES (placa negra)
 set_property -dict { PACKAGE_PIN Y17   IOSTANDARD LVCMOS33 } [get_ports { switches[3] }];
