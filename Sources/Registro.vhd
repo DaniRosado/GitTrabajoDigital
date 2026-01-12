@@ -13,7 +13,7 @@ entity Registro is
           num_jug_out : out std_logic_vector (3 downto 0);
 
           num_round_in  : in  std_logic;
-          num_round_out : out std_logic_vector (7 downto 0);
+          num_round_out : out unsigned(7 downto 0);
 
           NumPiedras1_in : in std_logic_vector (1 downto 0);
           NumPiedras2_in : in std_logic_vector (1 downto 0);
@@ -74,26 +74,53 @@ begin
     Puntos3_out <= Puntos3_reg;
     Puntos4_out <= Puntos4_reg;
 
-    with estado_in select
-        num_jug_reg <= num_jug_in when SJug,
-                       num_jug_reg when others;
 
-    with estado_in select
-        num_round_reg <= num_round_reg + 1 when SJug,
-                         num_round_reg when others;
+    process(clk)
+    begin
+        if clk'event and clk = '1' then
+            if reset = '1' then
+                num_jug_reg <= (others => '0');
+                num_round_reg <= (others => '0');
 
-    with estado_in select
-        NumPiedras1_reg <= NumPiedras1_in when ExtPied,
-                           NumPiedras1_reg when others;
-    with estado_in select
-        NumPiedras2_reg <= NumPiedras2_in when ExtPied,
-                           NumPiedras2_reg when others; 
-    with estado_in select
-        NumPiedras3_reg <= NumPiedras3_in when ExtPied,
-                           NumPiedras3_reg when others; 
-    with estado_in select
-        NumPiedras4_reg <= NumPiedras4_in when ExtPied,
-                           NumPiedras4_reg when others; 
+                NumPiedras1_reg <= (others => '0');
+                NumPiedras2_reg <= (others => '0');
+                NumPiedras3_reg <= (others => '0');
+                NumPiedras4_reg <= (others => '0');
+
+                Apuesta1_reg <= (others => '0');
+                Apuesta2_reg <= (others => '0');
+                Apuesta3_reg <= (others => '0');
+                Apuesta4_reg <= (others => '0');
+
+                Puntos1_reg <= (others => '0');
+                Puntos2_reg <= (others => '0');
+                Puntos3_reg <= (others => '0');
+                Puntos4_reg <= (others => '0');
+            else
+                case estado_in is
+                    when SJug =>
+                        num_jug_reg <= num_jug_in;
+                    when ExtPied =>
+                        NumPiedras1_reg <= NumPiedras1_in;
+                        NumPiedras2_reg <= NumPiedras2_in;
+                        NumPiedras3_reg <= NumPiedras3_in;
+                        NumPiedras4_reg <= NumPiedras4_in;
+                    when IntrApuesta =>
+                        Apuesta1_reg <= Apuesta1_in;
+                        Apuesta2_reg <= Apuesta2_in;
+                        Apuesta3_reg <= Apuesta3_in;
+                        Apuesta4_reg <= Apuesta4_in;
+                    when ResRonda =>
+                        Puntos1_reg <= unsigned(Puntos1_in);
+                        Puntos2_reg <= unsigned(Puntos2_in);
+                        Puntos3_reg <= unsigned(Puntos3_in);
+                        Puntos4_reg <= unsigned(Puntos4_in);
+                    when others =>
+                        null;
+                end case;
+            end if;
+        end if;
+    end process;
 
 
 
