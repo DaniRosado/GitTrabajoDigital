@@ -4,3 +4,9 @@ Decoder7s: Revisar si hay letras ineccesarias
 DecoderLeds
 DecoderControler
 RNG_Generator
+Antirrebotes
+RNG_generator
+Freqdiv
+
+
+Stage_package
