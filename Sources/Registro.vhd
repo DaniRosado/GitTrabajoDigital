@@ -1,11 +1,12 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use work.Estados_pkg.all;
 
 entity Registro is
     Port (clk : in STD_LOGIC;
           reset : in STD_LOGIC;
 
-
+          estado_in : in estados;
 
           NumPiedras1_in : in std_logic_vector (1 downto 0);
           NumPiedras2_in : in std_logic_vector (1 downto 0);
@@ -37,3 +38,4 @@ entity Registro is
           Puntos3_out : out std_logic;
           Puntos4_out : out std_logic);
 end entity;
+
