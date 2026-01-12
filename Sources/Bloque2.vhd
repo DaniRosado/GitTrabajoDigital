@@ -11,8 +11,8 @@ entity Bloque2 is
         num_ronda   : in  unsigned (7 downto 0);            -- Ronda actual
         rng_in      : in  std_logic_vector (5 downto 0);
 
-        switches      : in  std_logic_vector (3 downto 0);
-        btn_continue : in  std_logic;
+        switches        : in  std_logic_vector (3 downto 0);
+        btn_continue    : in  std_logic;
         btn_confirm   : in  std_logic;
 
         fdiv_fin   : in  std_logic;                         -- Pulso de fin de 5s
