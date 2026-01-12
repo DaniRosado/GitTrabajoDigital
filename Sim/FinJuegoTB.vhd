@@ -26,13 +26,13 @@ begin
     port map(
       clk           => clk_tb,
       reset         => reset_tb,
-      Num_jugadores => Num_jugadores_tb,
-      p1            => p1_tb,
-      p2            => p2_tb,
-      p3            => p3_tb,
-      p4            => p4_tb,
+      num_jug => Num_jugadores_tb,
+      R_Puntos1            => p1_tb,
+      R_Puntos1            => p2_tb,
+      R_Puntos1            => p3_tb,
+      R_Puntos4            => p4_tb,
       repetir       => repetir_tb,
-      ganador       => ganador_tb
+      segments7       => ganador_tb
     );
 
   -- Reloj: periodo 10 ns

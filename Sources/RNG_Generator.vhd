@@ -11,7 +11,7 @@ end entity;
 
 
 architecture Behavioral of RNG_Generator is
-signal counter : integer range 0 to 51 := 0;     -- %52 en el m.c.m. de 4 y 13
+    signal counter : integer range 0 to 51 := 0;     -- %52 en el m.c.m. de 4 y 13
 begin
 
     process(clk, reset)

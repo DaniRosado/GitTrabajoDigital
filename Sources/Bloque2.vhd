@@ -4,28 +4,28 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity Bloque2 is
     port (
-        clk           : in  std_logic;
-        reset         : in  std_logic;
+        clk     : in  std_logic;
+        reset   : in  std_logic;
         
-        NUM_JUGADORES : in  std_logic_vector (3 downto 0); -- "0010"(2), "0011"(3), "0100"(4)
-        NUM_RONDA     : in  unsigned (7 downto 0); -- Ronda actual
-        ALEATORIO_IN  : in  std_logic_vector (5 downto 0);
-        SWITCHES      : in  std_logic_vector (3 downto 0);
+        num_jug     : in  std_logic_vector (3 downto 0);    -- "0010"(2), "0011"(3), "0100"(4)
+        num_ronda   : in  unsigned (7 downto 0);            -- Ronda actual
+        rng_in      : in  std_logic_vector (5 downto 0);
+
+        switches      : in  std_logic_vector (3 downto 0);
+        btn_continue : in  std_logic;
         btn_confirm   : in  std_logic;
-        btn_continuar : in  std_logic;
 
-        freqdiv_end   : in  std_logic;                     -- Pulso de fin de 5s
+        fdiv_end   : in  std_logic;                         -- Pulso de fin de 5s
+        fdiv_reset : out std_logic;
 
-        
-        freqdiv_reset : out std_logic; 
         segments7     : out std_logic_vector (19 downto 0); -- 4 dígitos x 5 bits
 
-        PIEDRAS_P1           : out std_logic_vector (1 downto 0);  -- Apuesta al registro J1
-        PIEDRAS_P2           : out std_logic_vector (1 downto 0);  -- Apuesta al registro J2
-        PIEDRAS_P3           : out std_logic_vector (1 downto 0);  -- Apuesta al registro J3
-        PIEDRAS_P4           : out std_logic_vector (1 downto 0);  -- Apuesta al registro J4
+        R_NumPiedras1   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J1
+        R_NumPiedras2   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J2
+        R_NumPiedras3   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J3
+        R_NumPiedras4   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J4
 
-        FIN_FASE : out std_logic                       -- Fin de fase
+        fin_fase : out std_logic
     );
 end entity;
 
@@ -54,18 +54,18 @@ begin
 
             if reset = '1' then
                 state <= INICIO;
-                FIN_FASE <= '0';
+                fin_fase <= '0';
 
                 segments7 <= (others => '1');   -- Todo apagado
             else
                 case state is
                     -- Espera de activación
                     when INICIO =>
-                        FIN_FASE <= '0';
+                        fin_fase <= '0';
                         current_player <= 1;
                         stones_introduced <= (others => 0);
                         state <= ESPERA_INPUT;
-                        freqdiv_reset <= '1';
+                        fdiv_reset <= '1';
 
                     -- Muestra "chx" y espera entrada
                     when ESPERA_INPUT =>
@@ -73,13 +73,13 @@ begin
                         segments7 <= "10100" & "10101" & std_logic_vector(to_unsigned(current_player, 5)) & "11111";
                         
                         if current_player = 1 then
-                            current_stone <= to_integer(unsigned(ALEATORIO_IN)) mod 4 ;
-                            if not (NUM_RONDA = "00000000" and current_stone = 0) then  -- Primera ronda
+                            current_stone <= to_integer(unsigned(rng_in)) mod 4 ;
+                            if not (num_ronda = "00000000" and current_stone = 0) then  -- Primera ronda
                                 state <= VALIDAR;
                             end if;
 
                         elsif btn_confirm = '1' then
-                            current_stone <= to_integer(unsigned(SWITCHES));
+                            current_stone <= to_integer(unsigned(switches));
                             state <= VALIDAR;
                         end if;
 
@@ -87,7 +87,7 @@ begin
                     when VALIDAR =>
                         is_valid <= '1';
                         -- Regla 1: Rango 0 a 3 Piedras      Regla 2: En ronda 0 no puede elegir 0 piedras
-                        if (current_stone > 3) or (NUM_RONDA = "00000000" and current_stone = 0) then
+                        if (current_stone > 3) or (num_ronda = "00000000" and current_stone = 0) then
                             is_valid <= '0';
                         end if;
 
@@ -95,7 +95,7 @@ begin
 
                     -- Muestra chC (Correcto) o chE (Error) durante 5s
                     when PRINT_RESULTADO =>
-                        freqdiv_reset <= '0'; -- Inicia conteo externo
+                        fdiv_reset <= '0'; -- Inicia conteo externo
                         if is_valid = '1' then
                             -- Display: [c][h][Jugador][C]
                             segments7 <= "10100" & "10101" & std_logic_vector(to_unsigned(current_player, 5)) & "01100";
@@ -105,8 +105,8 @@ begin
                         end if;
 
                         -- Espera fin de 5s o botón continuar
-                        if freqdiv_end = '1' or (btn_continuar = '1' and is_valid = '1') then
-                                freqdiv_reset <= '1';
+                        if fdiv_end = '1' or (btn_continue = '1' and is_valid = '1') then
+                                fdiv_reset <= '1';
                                 if is_valid = '1' then
                                     -- Guardar en registro interno
                                     stones_introduced(current_player - 1) <= current_stone;
@@ -118,7 +118,7 @@ begin
 
                     -- Control de bucle de jugadores
                     when ST_NEXT_PLAYER =>
-                        if current_player = to_integer(unsigned(NUM_JUGADORES)) then
+                        if current_player = to_integer(unsigned(num_jug)) then
                             state <= FIN;
                         else
                             current_player <= current_player + 1;
@@ -126,14 +126,14 @@ begin
                         end if;
 
                     when FIN =>
-                        FIN_FASE <= '1'; 
+                        fin_fase <= '1'; 
                 end case;
             end if;
         end if;
     end process;
 
-    PIEDRAS_P1 <= std_logic_vector(to_unsigned(stones_introduced(0), 2));
-    PIEDRAS_P2 <= std_logic_vector(to_unsigned(stones_introduced(1), 2));
-    PIEDRAS_P3 <= std_logic_vector(to_unsigned(stones_introduced(2), 2));
-    PIEDRAS_P4 <= std_logic_vector(to_unsigned(stones_introduced(3), 2));
+    R_NumPiedras1 <= std_logic_vector(to_unsigned(stones_introduced(0), 2));
+    R_NumPiedras2 <= std_logic_vector(to_unsigned(stones_introduced(1), 2));
+    R_NumPiedras3 <= std_logic_vector(to_unsigned(stones_introduced(2), 2));
+    R_NumPiedras4 <= std_logic_vector(to_unsigned(stones_introduced(3), 2));
 end Behavioral;

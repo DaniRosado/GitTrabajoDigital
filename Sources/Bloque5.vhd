@@ -3,17 +3,19 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity Bloque5 is
-  port(
+  Port(
     clk           : in  std_logic;
     reset         : in  std_logic;
     
-    Num_jugadores : in  std_logic_vector(3 downto 0);
-    p1            : in  std_logic_vector(1 downto 0);
-    p2            : in  std_logic_vector(1 downto 0);
-    p3            : in  std_logic_vector(1 downto 0);
-    p4            : in  std_logic_vector(1 downto 0);
-    repetir       : out std_logic;
-    ganador       : out std_logic_vector(19 downto 0) -- display
+    num_jug     : in  std_logic_vector(3 downto 0);
+    R_Puntos1   : in  std_logic_vector(1 downto 0);
+    R_Puntos2   : in  std_logic_vector(1 downto 0);
+    R_Puntos3   : in  std_logic_vector(1 downto 0);
+    R_Puntos4   : in  std_logic_vector(1 downto 0);
+
+    repetir     : out std_logic;
+
+    segments7   : out std_logic_vector(19 downto 0) -- display
   );
 end entity;
 
@@ -33,55 +35,56 @@ begin
 
   process(clk, reset)
   begin
-    if reset = '1' then
-      repetir <= '0';
-      ganador <= (others => '0');
-      win     <= '0';
-      digit  <= (others => '0');
+    if clk'event and clk = '1' then
 
-    elsif (clk'event and clk = '1') then
-
-      -- Si ya hay ganador, lo mantenemos fijo
-      if win = '1' then
+      if reset = '1' then
         repetir <= '0';
-        ganador(19 downto 5) <= FIN_TXT;
-        ganador(4 downto 0)  <= digit;
-
+        segments7 <= (others => '0');
+        win     <= '0';
+        digit  <= (others => '0');
       else
-        -- Por defecto: nadie ha ganado todavía -> repetir ronda
-        repetir <= '1';
-        ganador <= (others => '0');
 
-        -- Detectar ganador (puntos = 3)
-        if p1 = "11" then
-          win     <= '1';
-          digit  <= DIG1;
+        -- Si ya hay ganador, lo mantenemos fijo
+        if win = '1' then
           repetir <= '0';
-          ganador(19 downto 5) <= FIN_TXT;
-          ganador(4 downto 0)  <= DIG1;
+          segments7(19 downto 5) <= FIN_TXT;
+          segments7(4 downto 0)  <= digit;
 
-        elsif p2 = "11" then
-          win     <= '1';
-          digit  <= DIG2;
-          repetir <= '0';
-          ganador(19 downto 5) <= FIN_TXT;
-          ganador(4 downto 0)  <= DIG2;
+        else
+          -- Por defecto: nadie ha ganado todavía -> repetir ronda
+          repetir <= '1';
+          segments7 <= (others => '0');
 
-        elsif p3 = "11" then
-          win     <= '1';
-          digit  <= DIG3;
-          repetir <= '0';
-          ganador(19 downto 5) <= FIN_TXT;
-          ganador(4 downto 0)  <= DIG3;
+          -- Detectar ganador (puntos = 3)
+          if R_Puntos1 = "11" then
+            win     <= '1';
+            digit  <= DIG1;
+            repetir <= '0';
+            segments7(19 downto 5) <= FIN_TXT;
+            segments7(4 downto 0)  <= DIG1;
 
-        elsif p4 = "11" then
-          win     <= '1';
-          digit  <= DIG4;
-          repetir <= '0';
-          ganador(19 downto 5) <= FIN_TXT;
-          ganador(4 downto 0)  <= DIG4;
+          elsif R_Puntos2 = "11" then
+            win     <= '1';
+            digit  <= DIG2;
+            repetir <= '0';
+            segments7(19 downto 5) <= FIN_TXT;
+            segments7(4 downto 0)  <= DIG2;
+
+          elsif R_Puntos3 = "11" then
+            win     <= '1';
+            digit  <= DIG3;
+            repetir <= '0';
+            segments7(19 downto 5) <= FIN_TXT;
+            segments7(4 downto 0)  <= DIG3;
+
+          elsif R_Puntos4 = "11" then
+            win     <= '1';
+            digit  <= DIG4;
+            repetir <= '0';
+            segments7(19 downto 5) <= FIN_TXT;
+            segments7(4 downto 0)  <= DIG4;
+          end if;
         end if;
-
       end if;
     end if;
   end process;

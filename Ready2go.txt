@@ -3,3 +3,4 @@ Listado de componetes corregidos:
 Decoder7s: Revisar si hay letras ineccesarias
 DecoderLeds
 DecoderControler
+RNG_Generator

@@ -3,27 +3,30 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity Bloque3 is
-    port (
-        clk           : in  std_logic;
-        reset         : in  std_logic;
+    Port (
+        clk     : in  std_logic;
+        reset   : in  std_logic;
         
-        btn_continue      : in  std_logic;
-        btn_confirm       : in  std_logic;
-        switches      : in  std_logic_vector (3 downto 0);
-        player_number : in  std_logic_vector (3 downto 0); -- "0010"(2), "0011"(3), "0100"(4)
-        freqdiv_end   : in  std_logic;                     -- Pulso de fin de 5s
-        round         : in  unsigned (7 downto 0); -- Ronda actual
-        rng           : in  std_logic_vector (5 downto 0);
+        num_jug     : in  std_logic_vector (3 downto 0); -- "0010"(2), "0011"(3), "0100"(4)
+        num_ronda       : in  unsigned (7 downto 0); -- Ronda actual
+        rng_in         : in  std_logic_vector (5 downto 0);
         
-        freqdiv_reset : out std_logic;
-        segments7     : out std_logic_vector (19 downto 0); -- 4 dígitos x 5 bits
-        leds          : out std_logic_vector (3 downto 0);  -- Barra de LEDs
-        ap1           : out std_logic_vector (3 downto 0);  -- Apuesta al registro J1
-        ap2           : out std_logic_vector (3 downto 0);  -- Apuesta al registro J2
-        ap3           : out std_logic_vector (3 downto 0);  -- Apuesta al registro J3
-        ap4           : out std_logic_vector (3 downto 0);  -- Apuesta al registro J4
+        switches    : in  std_logic_vector (3 downto 0);
+        btn_continue    : in  std_logic;
+        btn_confirm     : in  std_logic;
 
-        end_inserting : out std_logic                       -- Fin de fase
+        fdiv_end    : in  std_logic;                     -- Pulso de fin de 5s
+        fdiv_reset  : out std_logic;
+
+        segments7   : out std_logic_vector (19 downto 0); -- 4 dígitos x 5 bits
+        leds        : out std_logic_vector (3 downto 0);  -- Barra de LEDs
+
+        R_Apuesta1  : out std_logic_vector (3 downto 0);  -- Apuesta al registro J1
+        R_Apuesta2  : out std_logic_vector (3 downto 0);  -- Apuesta al registro J2
+        R_Apuesta3  : out std_logic_vector (3 downto 0);  -- Apuesta al registro J3
+        R_Apuesta4  : out std_logic_vector (3 downto 0);  -- Apuesta al registro J4
+
+        fin_fase : out std_logic                       -- Fin de fase
     );
 end entity;
 
@@ -54,14 +57,14 @@ begin
 
             if reset = '1' then
                 
-                freqdiv_reset <= '1';
+                fdiv_reset <= '1';
                 segments7 <= (others => '1'); -- Apagar display
                 leds <= (others => '0');
-                ap1  <= (others => '1');
-                ap2  <=(others => '1');  
-                ap3 <= (others => '1');
-                ap4 <= (others => '1');
-                end_inserting <= '0';
+                R_Apuesta1  <= (others => '1');
+                R_Apuesta2  <=(others => '1');  
+                R_Apuesta3 <= (others => '1');
+                R_Apuesta4 <= (others => '1');
+                fin_fase <= '0';
 
                 state <= INICIO;
 
@@ -81,7 +84,7 @@ begin
                     when CALCULAR_TURNO =>
                         -- El primer jugador de la ronda es: (round MOD player_number) + 1
                         -- Luego sumamos los ya procesados con desplazamiento circular
-                        current_player <= ((to_integer(round) + players_processed) rem to_integer(unsigned(player_number))) + 1;              --!!!!!!!!!!
+                        current_player <= ((to_integer(num_ronda) + players_processed) rem to_integer(unsigned(num_jug))) + 1;              --!!!!!!!!!!
                         state <= ESPERA_INPUT;
 
                     -- Muestra "APx" y espera entrada
@@ -91,7 +94,7 @@ begin
                         
                         if current_player = 1 then
                             if rng_valid = '0' then 
-                                current_bet <= to_integer(unsigned(rng)) mod 13;
+                                current_bet <= to_integer(unsigned(rng_in)) mod 13;
                             end if;
                             rng_valid <= '1';
                             for i in 0 to 3 loop
@@ -100,7 +103,7 @@ begin
                                 end if;
                             end loop;
 
-                            if current_bet > to_integer(unsigned(player_number)) * 3 then
+                            if current_bet > to_integer(unsigned(num_jug)) * 3 then
                                 rng_valid <= '0';
                             end if;
                             
@@ -117,7 +120,7 @@ begin
                     when VALIDAR =>
                         is_valid <= '1';
                         -- Regla 1: Rango 0 a 3*Jugadores
-                        if current_bet > to_integer(unsigned(player_number)) * 3 then
+                        if current_bet > to_integer(unsigned(num_jug)) * 3 then
                             is_valid <= '0';
                         end if;
                         -- Regla 2: No repetida en la ronda
@@ -130,7 +133,7 @@ begin
 
                     -- Muestra APC (Correcto) o APE (Error) durante 5s
                     when PRINT_RESULTADO =>
-                        freqdiv_reset <= '0'; -- Inicia conteo externo
+                        fdiv_reset <= '0'; -- Inicia conteo externo
                         if is_valid = '1' then
                             -- Display: [A][P][ID][C]
                             segments7 <= "01010" & "10110" & std_logic_vector(to_unsigned(current_player, 5)) & "01100";
@@ -142,8 +145,8 @@ begin
                         end if;
 
                         -- Espera fin de 5s o botón continuar
-                        if freqdiv_end = '1' or btn_continue = '1' then
-                            freqdiv_reset <= '1';
+                        if fdiv_end = '1' or btn_continue = '1' then
+                            fdiv_reset <= '1';
                             if is_valid = '1' then
                                 -- Guardar en registro externo
                                 bets_made(current_player - 1) <= current_bet;
@@ -155,7 +158,7 @@ begin
 
                     -- Control de bucle de jugadores
                     when ST_NEXT_PLAYER =>
-                        if players_processed + 1 = to_integer(unsigned(player_number)) then
+                        if players_processed + 1 = to_integer(unsigned(num_jug)) then
                             state <= FIN;
                         else
                             players_processed <= players_processed + 1;
@@ -163,11 +166,11 @@ begin
                         end if;
 
                     when FIN =>
-                        ap1 <= std_logic_vector(to_unsigned(bets_made(0), 4));
-                        ap2 <= std_logic_vector(to_unsigned(bets_made(1), 4));
-                        ap3 <= std_logic_vector(to_unsigned(bets_made(2), 4));
-                        ap4 <= std_logic_vector(to_unsigned(bets_made(3), 4));
-                        end_inserting <= '1'; 
+                        R_Apuesta1 <= std_logic_vector(to_unsigned(bets_made(0), 4));
+                        R_Apuesta2 <= std_logic_vector(to_unsigned(bets_made(1), 4));
+                        R_Apuesta3 <= std_logic_vector(to_unsigned(bets_made(2), 4));
+                        R_Apuesta4 <= std_logic_vector(to_unsigned(bets_made(3), 4));
+                        fin_fase <= '1'; 
 
                 end case;
             end if;
