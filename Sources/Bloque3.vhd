@@ -15,7 +15,7 @@ entity Bloque3 is
         btn_continue    : in  std_logic;
         btn_confirm     : in  std_logic;
 
-        fdiv_end    : in  std_logic;                     -- Pulso de fin de 5s
+        fdiv_fin    : in  std_logic;                     -- Pulso de fin de 5s
         fdiv_reset  : out std_logic;
 
         segments7   : out std_logic_vector (19 downto 0); -- 4 dígitos x 5 bits
@@ -145,7 +145,7 @@ begin
                         end if;
 
                         -- Espera fin de 5s o botón continuar
-                        if fdiv_end = '1' or btn_continue = '1' then
+                        if fdiv_fin = '1' or btn_continue = '1' then
                             fdiv_reset <= '1';
                             if is_valid = '1' then
                                 -- Guardar en registro externo
