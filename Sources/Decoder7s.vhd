@@ -1,7 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-
 entity Decoder7s is
     port(mensaje_in   :  in  std_logic_vector(4 downto 0);
          mensaje_out  :  out std_logic_vector(6 downto 0));
@@ -21,7 +20,7 @@ begin
                        "0000000" when "01000",  --8
                        "0001100" when "01001",  --9
                        "0001000" when "01010",  --A
-                       "1100000" when "01011",  --b
+                       "1100000" when "01011",  --b 
                        "0110001" when "01100",  --C
                        "1000010" when "01101",  --d
                        "0110000" when "01110",  --E

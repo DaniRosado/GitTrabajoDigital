@@ -7,7 +7,7 @@ end SeleccionJugadoresTB;
 
 architecture Behavioral of SeleccionJugadoresTB is
 
-  component SeleccionJugadores is
+  component Bloque1 is
     port(
       clk            : in  std_logic;
       reset          : in  std_logic;
@@ -38,7 +38,7 @@ architecture Behavioral of SeleccionJugadoresTB is
 begin
 
   -- Circuito bajo test
-  CUT: SeleccionJugadores
+  CUT: Bloque1
     port map(
       clk            => clk_tb,
       reset          => reset_tb,

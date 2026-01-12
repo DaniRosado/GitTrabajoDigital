@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity FinJuego is
+entity Bloque5 is
   port(
     clk           : in  std_logic;
     reset         : in  std_logic;
@@ -15,9 +15,9 @@ entity FinJuego is
     repetir       : out std_logic;
     ganador       : out std_logic_vector(19 downto 0) -- display
   );
-end FinJuego;
+end entity;
 
-architecture Behavioral of FinJuego is
+architecture Behavioral of Bloque5 is
 
   constant FIN_TXT : std_logic_vector(14 downto 0) := "011111011111000";
 

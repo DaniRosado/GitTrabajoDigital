@@ -1,24 +1,3 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 24.12.2025 12:32:53
--- Design Name: 
--- Module Name: ResolRonda - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -31,11 +10,13 @@ use IEEE.NUMERIC_STD.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity ResolRonda is
+entity Bloque4 is
     Port (  clk : in STD_LOGIC;
             reset : in STD_LOGIC;
+
             fdiv_reset : out STD_LOGIC;
             fdiv_fin : in STD_LOGIC;
+            
             R_NumPiedras1 : in std_logic_vector (1 downto 0);
             R_NumPiedras2 : in std_logic_vector (1 downto 0);
             R_NumPiedras3 : in std_logic_vector (1 downto 0);
@@ -51,9 +32,9 @@ entity ResolRonda is
             W_Display : out std_logic_vector(19 downto 0);
             fin : out std_logic
            );
-end ResolRonda;
+end Bloque4;
 
-architecture Behavioral of ResolRonda is
+architecture Behavioral of Bloque4 is
     signal fin_s, pulsoflag : std_logic;
     type estados is (MostrarNumPiedras, MostrarTotPiedaras, MostrarApuestas, MostrarGanador);
     signal estado : estados;

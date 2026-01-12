@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity SeleccionJugadores is
+entity Bloque1 is
   port(
     clk            : in  std_logic;
     reset          : in  std_logic;  -- 1 = apagado (estado inicial), 0 = funcionando
@@ -19,7 +19,7 @@ entity SeleccionJugadores is
   );
 end entity;
 
-architecture Behavioral of SeleccionJugadores is
+architecture Behavioral of Bloque1 is
 
   signal aux1       : std_logic_vector(14 downto 0);
   signal aux2       : std_logic_vector(4 downto 0);

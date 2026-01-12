@@ -22,7 +22,7 @@ architecture Behavioral of FinJuegoTB is
 begin
 
   -- Circuito bajo test
-  DUT: entity work.FinJuego
+  DUT: entity work.Bloque5
     port map(
       clk           => clk_tb,
       reset         => reset_tb,
