@@ -79,7 +79,50 @@ architecture Behavioral of Top is
     signal estado_fms : estados;
     signal fin_B1_int, fin_B2_int, fin_B3_int, fin_B4_int, fin_B5_int : STD_LOGIC;
     signal reset_B1_int, reset_B2_int, reset_B3_int, reset_B4_int, reset_B5_int : STD_LOGIC;
+    -- instanciamos registro 
+    component Registro is
+    Port (clk : in STD_LOGIC;
+          reset : in STD_LOGIC;
 
+          NumPiedras1_in : in std_logic_vector (1 downto 0);
+          NumPiedras2_in : in std_logic_vector (1 downto 0);
+          NumPiedras3_in : in std_logic_vector (1 downto 0);
+          NumPiedras4_in : in std_logic_vector (1 downto 0);
+
+          NumPiedras1_out : out std_logic_vector (1 downto 0);
+          NumPiedras2_out : out std_logic_vector (1 downto 0);
+          NumPiedras3_out : out std_logic_vector (1 downto 0);
+          NumPiedras4_out : out std_logic_vector (1 downto 0);
+
+          Apuesta1_in : in std_logic_vector (3 downto 0);
+          Apuesta2_in : in std_logic_vector (3 downto 0);
+          Apuesta3_in : in std_logic_vector (3 downto 0);
+          Apuesta4_in : in std_logic_vector (3 downto 0);
+
+          Apuesta1_out : out std_logic_vector (3 downto 0);
+          Apuesta2_out : out std_logic_vector (3 downto 0);
+          Apuesta3_out : out std_logic_vector (3 downto 0);
+          Apuesta4_out : out std_logic_vector (3 downto 0);
+
+          Puntos1_in : in std_logic;
+          Puntos2_in : in std_logic;
+          Puntos3_in : in std_logic;
+          Puntos4_in : in std_logic;
+
+          Puntos1_out : out std_logic (1 downto 0); --máxima puntuación 3
+          Puntos2_out : out std_logic (1 downto 0);
+          Puntos3_out : out std_logic (1 downto 0);
+          Puntos4_out : out std_logic (1 downto 0);
+        );
+    end component;
+    -- señales internas del registro
+    signal reset_reg_int : std_logic;
+    signal NumPiedras1_in_int, NumPiedras2_in_int, NumPiedras3_in_int, NumPiedras4_in_int : std_logic_vector (1 downto 0);
+    signal NumPiedras1_out_int, NumPiedras2_out_int, NumPiedras3_out_int, NumPiedras4_out_int : std_logic_vector (1 downto 0);
+    signal Apuesta1_in_int, Apuesta2_in_int, Apuesta3_in_int, Apuesta4_in_int : std_logic_vector (3 downto 0);
+    signal Apuesta1_out_int, Apuesta2_out_int, Apuesta3_out_int, Apuesta4_out_int : std_logic_vector (3 downto 0);
+    signal Puntos1_in_int, Puntos2_in_int, Puntos3_in_int, Puntos4_in_int : std_logic;
+    signal Puntos1_out_int, Puntos2_out_int, Puntos3_out_int, Puntos4_out_int : std_logic (1 downto 0);
     -- instanciamos los distintos bloques 
     component Bloque1 is
     port(
@@ -98,7 +141,6 @@ architecture Behavioral of Top is
     );
     end component;
     -- definimos las señales internas del bloque 1
-    
     component Bloque2 is
     port (
         clk     : in  std_logic;
@@ -253,6 +295,8 @@ begin
                reset_B4 => reset_B4_int,
                reset_B5 => reset_B5_int
              );
+    -- instanciamos el registro
+
     -- instanciamos los bloques principales
     -- instanciación del bloque 1
     bloque1_inst : Bloque1
@@ -272,19 +316,4 @@ begin
     port map( clk => clk,
               reset => reset_B2_int,
               num_jug => leds_4,
-              num_ronda => "00000001", -- pendiente de conectar
-              rng_in => "000000", -- pendiente de conectar
-              switches => switches,
-              btn_continue => botonesf(2),
-              btn_confirm => botonesf(0),
-              fdiv_fin => fdiv_out_int,
-              fdiv_reset => fdiv_reset_int,
-              segments7 => long_mensaje_in_int,
-              R_NumPiedras1 => open,
-              R_NumPiedras2 => open,
-              R_NumPiedras3 => open,
-              R_NumPiedras4 => open,
-              fin_fase => fin_B2_int
-    );
-    
 end Behavioral;
