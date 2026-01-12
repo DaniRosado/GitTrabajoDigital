@@ -69,19 +69,17 @@ architecture Behavioral of Top is
     component fms is
     Port (  clk : in STD_LOGIC;
             reset : in STD_LOGIC;
-            
-            signal estado : estados;
-            signal fin_B1 : in STD_LOGIC;
-            signal fin_B2 : in STD_LOGIC;
-            signal fin_B3 : in STD_LOGIC;
-            signal fin_B4 : in STD_LOGIC;
-            signal fin_B5 : in STD_LOGIC;
-
-            signal reset_B1 : out STD_LOGIC;
-            signal reset_B2 : out STD_LOGIC;
-            signal reset_B3 : out STD_LOGIC;
-            signal reset_B4 : out STD_LOGIC;
-            signal reset_B5 : out STD_LOGIC
+            estado_out : out estados;
+            fin_B1 : in STD_LOGIC;
+            fin_B2 : in STD_LOGIC;
+            fin_B3 : in STD_LOGIC;
+            fin_B4 : in STD_LOGIC;
+            fin_B5 : in STD_LOGIC;
+            reset_B1 : out STD_LOGIC;
+            reset_B2 : out STD_LOGIC;
+            reset_B3 : out STD_LOGIC;
+            reset_B4 : out STD_LOGIC;
+            reset_B5 : out STD_LOGIC
            );
     end component;
     -- señales internas del fms
@@ -155,7 +153,7 @@ architecture Behavioral of Top is
         switches       : in  std_logic_vector(3 downto 0);
         fdiv_fin   : in  std_logic;
         fdiv_reset : out std_logic;  -- Va al reset del FreqDiv: 1=reset(parado), 0=contando
-        Fin            : out std_logic;
+        fin_fase            : out std_logic;
         seven_segments : out std_logic_vector(19 downto 0);
         num_jug            : out std_logic_vector(3 downto 0)
     );
@@ -309,7 +307,7 @@ begin
     fms_inst : fms
     Port map ( clk => clk,
                reset => botonesf(1), -- aquí seguramente tengamos que meter el boton1
-               estado => estado_fms,
+               estado_out => estado_fms,
                fin_B1 => fin_B1_int,
                fin_B2 => fin_B2_int,
                fin_B3 => fin_B3_int,
@@ -366,7 +364,7 @@ begin
               switches => switches,
               fdiv_fin => fdiv_out_int,
               fdiv_reset => fdiv_reset_int,
-              Fin => fin_B1_int,
+              fin_fase => fin_B1_int,
               seven_segments => long_mensaje_in_int,
               num_jug => num_jug_in_int
     );
