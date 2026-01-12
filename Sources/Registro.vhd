@@ -69,11 +69,10 @@ begin
     NumPiedras3_out <= NumPiedras3_reg;
     NumPiedras4_out <= NumPiedras4_reg;
 
-    Puntos1_out <= Puntos1_reg;
-    Puntos2_out <= Puntos2_reg;
-    Puntos3_out <= Puntos3_reg;
-    Puntos4_out <= Puntos4_reg;
-
+    Puntos1_out <= std_logic_vector(Puntos1_reg);
+    Puntos2_out <= std_logic_vector(Puntos2_reg);
+    Puntos3_out <= std_logic_vector(Puntos3_reg);
+    Puntos4_out <= std_logic_vector(Puntos4_reg);
 
     process(clk)
     begin
@@ -82,15 +81,6 @@ begin
                 num_jug_reg <= (others => '0');
                 num_round_reg <= (others => '0');
 
-                NumPiedras1_reg <= (others => '0');
-                NumPiedras2_reg <= (others => '0');
-                NumPiedras3_reg <= (others => '0');
-                NumPiedras4_reg <= (others => '0');
-
-                Apuesta1_reg <= (others => '0');
-                Apuesta2_reg <= (others => '0');
-                Apuesta3_reg <= (others => '0');
-                Apuesta4_reg <= (others => '0');
 
                 Puntos1_reg <= (others => '0');
                 Puntos2_reg <= (others => '0');
@@ -111,12 +101,14 @@ begin
                         Apuesta3_reg <= Apuesta3_in;
                         Apuesta4_reg <= Apuesta4_in;
                     when ResRonda =>
-                        Puntos1_reg <= unsigned(Puntos1_in);
-                        Puntos2_reg <= unsigned(Puntos2_in);
-                        Puntos3_reg <= unsigned(Puntos3_in);
-                        Puntos4_reg <= unsigned(Puntos4_in);
+                        if Puntos1_in = '1' then Puntos1_reg <= Puntos1_reg + 1; end if;
+                        if Puntos2_in = '1' then Puntos2_reg <= Puntos2_reg + 1; end if;
+                        if Puntos3_in = '1' then Puntos3_reg <= Puntos3_reg + 1; end if;
+                        if Puntos4_in = '1' then Puntos4_reg <= Puntos4_reg + 1; end if;
                     when others =>
                         null;
+
+                if num_round_in = '1' then num_round_reg <= num_round_reg + 1; end if;
                 end case;
             end if;
         end if;
