@@ -23,10 +23,8 @@ begin
         if reset = '1' then
             count <= 0;
             fdiv_out <= '0';
-            count <= 0;
-            fdiv_out <= '0';
         elsif clk'event and clk = '1' then
-            if count < max_count -1 then
+            if count < max_count - 1 then
                 count <= count + 1;
                 fdiv_out <= '0';
             else
