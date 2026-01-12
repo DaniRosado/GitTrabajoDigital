@@ -11,10 +11,14 @@ entity Bloque1 is
     btn_continue       : in  std_logic;  -- boton CONTINUAR (salta los 5s)
 
     switches       : in  std_logic_vector(3 downto 0);
+    fdiv_fin   : in  std_logic;
+    fdiv_reset : out std_logic;  -- Va al reset del FreqDiv: 1=reset(parado), 0=contando
+    Fin            : out std_logic;
     freq_div_fin   : in  std_logic;
     freq_div_start : out std_logic;  -- Va al reset del FreqDiv: 1=reset(parado), 0=contando
     fin_fase            : out std_logic;
     seven_segments : out std_logic_vector(19 downto 0);
+   num_jug            : out std_logic_vector(3 downto 0)
     num_jug            : out std_logic_vector(3 downto 0)
   );
 end entity;
@@ -24,7 +28,7 @@ architecture Behavioral of Bloque1 is
   signal aux1       : std_logic_vector(14 downto 0);
   signal aux2       : std_logic_vector(4 downto 0);
 
-  signal started    : std_logic;  -- 1 mientras el divisor está contando (freq_div_start=0)
+  signal started    : std_logic;  -- 1 mientras el divisor está contando (fdiv_reset=0)
 
   -- detector de flanco para CONFIRM
   signal conf_prev  : std_logic := '0';
@@ -62,7 +66,7 @@ begin
       cont_pulse <= '0';
 
       -- divisor apagado: reset del divisor a 1
-      freq_div_start <= '1';
+      fdiv_reset <= '1';
 
     elsif (clk'event and clk = '1') then
       -- por defecto
@@ -78,9 +82,9 @@ begin
 
       -- por defecto: mantener el reset del divisor según started
       if started = '1' then
-        freq_div_start <= '0';   -- contando
+        fdiv_reset <= '0';   -- contando
       else
-        freq_div_start <= '1';   -- parado
+        fdiv_reset <= '1';   -- parado
       end if;
 
       -- 1) Arranque: solo si NO estamos contando y hay pulsación de CONFIRM + switches válido
@@ -89,7 +93,7 @@ begin
            (switches = "0010" or switches = "0011" or switches = "0100") then
           num_jug <= switches;
           started <= '1';
-          freq_div_start <= '0';  -- empezamos a contar ya
+          fdiv_reset <= '0';  -- empezamos a contar ya
         end if;
       end if;
 
@@ -99,7 +103,7 @@ begin
         if freq_div_fin = '1' or cont_pulse = '1' then
           fin_fase <= '1';
           started <= '0';
-          freq_div_start <= '1';  -- paramos/reseteamos divisor inmediatamente
+          fdiv_reset <= '1';  -- paramos/reseteamos divisor inmediatamente
         end if;
       end if;
 
