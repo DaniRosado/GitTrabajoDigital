@@ -13,13 +13,10 @@ entity Bloque1 is
     switches       : in  std_logic_vector(3 downto 0);
     fdiv_fin   : in  std_logic;
     fdiv_reset : out std_logic;  -- Va al reset del FreqDiv: 1=reset(parado), 0=contando
-    Fin            : out std_logic;
-    freq_div_fin   : in  std_logic;
-    freq_div_start : out std_logic;  -- Va al reset del FreqDiv: 1=reset(parado), 0=contando
     fin_fase            : out std_logic;
     seven_segments : out std_logic_vector(19 downto 0);
-   num_jug            : out std_logic_vector(3 downto 0)
     num_jug            : out std_logic_vector(3 downto 0)
+
   );
 end entity;
 
@@ -100,7 +97,7 @@ begin
       -- 2) Fin: solo si estamos contando
       if started = '1' then
         -- Fin por tiempo (freq_div_fin) o por CONTINUE (salto de los 5s)
-        if freq_div_fin = '1' or cont_pulse = '1' then
+        if fdiv_fin = '1' or cont_pulse = '1' then
           fin_fase <= '1';
           started <= '0';
           fdiv_reset <= '1';  -- paramos/reseteamos divisor inmediatamente
