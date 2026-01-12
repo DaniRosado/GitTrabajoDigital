@@ -42,6 +42,15 @@ architecture Behavioral of Top is
     end component;
     -- señales internas del freqdiv
     signal fdiv_reset_int, fdiv_out_int : std_logic;
+    -- RNG
+    component RNG_Generator is
+    Port ( clk     : in  STD_LOGIC;
+           reset   : in  STD_LOGIC; --Reset de la placa
+
+           rng_out : out STD_LOGIC_VECTOR (5 downto 0));
+    end component;
+    -- señales internas del RNG
+    signal rng_out_int : STD_LOGIC_VECTOR (5 downto 0);
     -- Controlador de los leds
     component DecoderControler is
     port(   clk    :   in  std_logic;
@@ -84,6 +93,14 @@ architecture Behavioral of Top is
     Port (clk : in STD_LOGIC;
           reset : in STD_LOGIC;
 
+          estado_in : in estados;
+
+          num_jug_in : in std_logic_vector (3 downto 0);
+          num_jug_out : out std_logic_vector (3 downto 0);
+
+          num_round_in  : in  std_logic;
+          num_round_out : out unsigned (7 downto 0);
+
           NumPiedras1_in : in std_logic_vector (1 downto 0);
           NumPiedras2_in : in std_logic_vector (1 downto 0);
           NumPiedras3_in : in std_logic_vector (1 downto 0);
@@ -109,14 +126,18 @@ architecture Behavioral of Top is
           Puntos3_in : in std_logic;
           Puntos4_in : in std_logic;
 
-          Puntos1_out : out std_logic (1 downto 0); --máxima puntuación 3
-          Puntos2_out : out std_logic (1 downto 0);
-          Puntos3_out : out std_logic (1 downto 0);
-          Puntos4_out : out std_logic (1 downto 0);
+          Puntos1_out : out std_logic_vector (1 downto 0);
+          Puntos2_out : out std_logic_vector (1 downto 0);
+          Puntos3_out : out std_logic_vector (1 downto 0);
+          Puntos4_out : out std_logic_vector (1 downto 0)
         );
     end component;
     -- señales internas del registro
     signal reset_reg_int : std_logic;
+    signal estado_in_int : estados;
+    signal num_jug_in_int, num_jug_out_int : std_logic_vector (3 downto 0);
+    signal num_round_in_int : std_logic;
+    signal num_round_out_int : unsigned (7 downto 0);
     signal NumPiedras1_in_int, NumPiedras2_in_int, NumPiedras3_in_int, NumPiedras4_in_int : std_logic_vector (1 downto 0);
     signal NumPiedras1_out_int, NumPiedras2_out_int, NumPiedras3_out_int, NumPiedras4_out_int : std_logic_vector (1 downto 0);
     signal Apuesta1_in_int, Apuesta2_in_int, Apuesta3_in_int, Apuesta4_in_int : std_logic_vector (3 downto 0);
@@ -232,7 +253,7 @@ architecture Behavioral of Top is
             R_Puntos3   : in  std_logic_vector(1 downto 0);
             R_Puntos4   : in  std_logic_vector(1 downto 0);
 
-            repetir     : out std_logic;
+            fin_fase     : out std_logic;
 
             segments7   : out std_logic_vector(19 downto 0) -- display
         );
@@ -270,6 +291,12 @@ begin
     Port map ( clk => clk,
                reset => fdiv_reset_int,
                fdiv_out => fdiv_out_int
+             );
+    -- instanciación del RNG
+    rng_inst : RNG_Generator
+    Port map ( clk => clk,
+               reset => reset,
+               rng_out => rng_out_int
              );
     -- instanciación del decodercontroler
     decodercontroler_inst : DecoderControler
@@ -309,11 +336,80 @@ begin
               fdiv_reset => fdiv_reset_int,
               Fin => fin_B1_int,
               seven_segments => long_mensaje_in_int,
-              num_jug => leds_4
+              num_jug => num_jug_in_int
     );
     -- instanciación del bloque 2
     bloque2_inst : Bloque2
     port map( clk => clk,
               reset => reset_B2_int,
-              num_jug => leds_4,
+              num_jug => num_jug_out_int,
+              num_ronda => num_round_out_int,
+              rng_in => rng_out_int,
+              switches => switches,
+              btn_continue => botonesf(2),
+              btn_confirm => botonesf(0),
+              fdiv_fin => fdiv_out_int,
+              fdiv_reset => fdiv_reset_int,
+              segments7 => long_mensaje_in_int,
+              R_NumPiedras1 => NumPiedras1_in_int,
+              R_NumPiedras2 => NumPiedras2_in_int,
+              R_NumPiedras3 => NumPiedras3_in_int,
+              R_NumPiedras4 => NumPiedras4_in_int,
+              fin_fase => fin_B2_int
+    );
+    -- instanciación del bloque 3
+    bloque3_inst : Bloque3
+    port map( clk => clk,
+              reset => reset_B3_int,
+              num_jug => num_jug_out_int,
+              num_ronda => num_round_out_int,
+              rng_in => rng_out_int,
+              switches => switches,
+              btn_continue => botonesf(2),
+              btn_confirm => botonesf(0),
+              fdiv_fin => fdiv_out_int,
+              fdiv_reset => fdiv_reset_int,
+              segments7 => long_mensaje_in_int,
+              leds => leds_4,
+              R_Apuesta1 => Apuesta1_in_int,
+              R_Apuesta2 => Apuesta2_in_int,
+              R_Apuesta3 => Apuesta3_in_int,
+              R_Apuesta4 => Apuesta4_in_int,
+              fin_fase => fin_B3_int
+    );
+    -- instanciación del bloque 4
+    bloque4_inst : Bloque4
+    Port map ( clk => clk,
+               reset => reset_B4_int,
+               fdiv_reset => fdiv_reset_int,
+               fdiv_fin => fdiv_out_int,
+               R_NumPiedras1 => NumPiedras1_out_int,
+               R_NumPiedras2 => NumPiedras2_out_int,
+               R_NumPiedras3 => NumPiedras3_out_int,
+               R_NumPiedras4 => NumPiedras4_out_int,
+               R_Apuesta1 => Apuesta1_out_int,
+               R_Apuesta2 => Apuesta2_out_int,
+               R_Apuesta3 => Apuesta3_out_int,
+               R_Apuesta4 => Apuesta4_out_int,
+               R_Puntos1 => Puntos1_in_int,
+               R_Puntos2 => Puntos2_in_int,
+               R_Puntos3 => Puntos3_in_int,
+               R_Puntos4 => Puntos4_in_int,
+               segments7 => long_mensaje_in_int,
+               fin_fase => fin_B4_int
+             );
+    -- instanciación del bloque 5
+    bloque5_inst : Bloque5
+    Port map ( clk => clk,
+               reset => reset_B5_int,
+               num_jug => num_jug_out_int,
+               R_Puntos1 => Puntos1_out_int,
+               R_Puntos2 => Puntos2_out_int,
+               R_Puntos3 => Puntos3_out_int,
+               R_Puntos4 => Puntos4_out_int,
+               fin_fase => fin_B5_int,
+               segments7 => long_mensaje_in_int
+             );
+    -- hacemos la conexiones correspondientes
+    
 end Behavioral;
