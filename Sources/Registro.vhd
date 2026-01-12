@@ -82,6 +82,19 @@ begin
         num_round_reg <= num_round_reg + 1 when SJug,
                          num_round_reg when others;
 
+    with estado_in select
+        NumPiedras1_reg <= NumPiedras1_in when ExtPied,
+                           NumPiedras1_reg when others;
+    with estado_in select
+        NumPiedras2_reg <= NumPiedras2_in when ExtPied,
+                           NumPiedras2_reg when others; 
+    with estado_in select
+        NumPiedras3_reg <= NumPiedras3_in when ExtPied,
+                           NumPiedras3_reg when others; 
+    with estado_in select
+        NumPiedras4_reg <= NumPiedras4_in when ExtPied,
+                           NumPiedras4_reg when others; 
+
 
 
 
