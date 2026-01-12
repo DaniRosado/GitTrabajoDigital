@@ -7,21 +7,22 @@ use work.estados_pkg.all;
 entity fms is
     Port (  clk : in STD_LOGIC;
             reset : in STD_LOGIC;
-            signal estado : estados;
-            signal fin_B1 : in STD_LOGIC;
-            signal fin_B2 : in STD_LOGIC;
-            signal fin_B3 : in STD_LOGIC;
-            signal fin_B4 : in STD_LOGIC;
-            signal fin_B5 : in STD_LOGIC;
-            signal reset_B1 : out STD_LOGIC;
-            signal reset_B2 : out STD_LOGIC;
-            signal reset_B3 : out STD_LOGIC;
-            signal reset_B4 : out STD_LOGIC;
-            signal reset_B5 : out STD_LOGIC
+            estado_out : out estados;
+            fin_B1 : in STD_LOGIC;
+            fin_B2 : in STD_LOGIC;
+            fin_B3 : in STD_LOGIC;
+            fin_B4 : in STD_LOGIC;
+            fin_B5 : in STD_LOGIC;
+            reset_B1 : out STD_LOGIC;
+            reset_B2 : out STD_LOGIC;
+            reset_B3 : out STD_LOGIC;
+            reset_B4 : out STD_LOGIC;
+            reset_B5 : out STD_LOGIC
            );
 end fms;
 
 architecture Behavioral of fms is
+    signal estado : estados;
 begin
     process(clk, reset)
     begin
@@ -33,7 +34,6 @@ begin
             reset_B3 <= '0';
             reset_B4 <= '0';
             reset_B5 <= '0';
-            estado <= SJug;
         elsif clk'event and clk = '1' then
             case estado is
                 when SJug =>
@@ -78,4 +78,5 @@ begin
             end case;
         end if;
     end process;
+    estado_out <= estado;
 end Behavioral;

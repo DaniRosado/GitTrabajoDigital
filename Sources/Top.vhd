@@ -99,7 +99,7 @@ architecture Behavioral of Top is
           num_jug_out : out std_logic_vector (3 downto 0);
 
           num_round_in  : in  std_logic;
-          num_round_out : out unsigned (7 downto 0);
+          num_round_out : out unsigned(7 downto 0);
 
           NumPiedras1_in : in std_logic_vector (1 downto 0);
           NumPiedras2_in : in std_logic_vector (1 downto 0);
@@ -130,10 +130,9 @@ architecture Behavioral of Top is
           Puntos2_out : out std_logic_vector (1 downto 0);
           Puntos3_out : out std_logic_vector (1 downto 0);
           Puntos4_out : out std_logic_vector (1 downto 0)
-        );
+    );
     end component;
     -- señales internas del registro
-    signal reset_reg_int : std_logic;
     signal estado_in_int : estados;
     signal num_jug_in_int, num_jug_out_int : std_logic_vector (3 downto 0);
     signal num_round_in_int : std_logic;
@@ -143,7 +142,7 @@ architecture Behavioral of Top is
     signal Apuesta1_in_int, Apuesta2_in_int, Apuesta3_in_int, Apuesta4_in_int : std_logic_vector (3 downto 0);
     signal Apuesta1_out_int, Apuesta2_out_int, Apuesta3_out_int, Apuesta4_out_int : std_logic_vector (3 downto 0);
     signal Puntos1_in_int, Puntos2_in_int, Puntos3_in_int, Puntos4_in_int : std_logic;
-    signal Puntos1_out_int, Puntos2_out_int, Puntos3_out_int, Puntos4_out_int : std_logic (1 downto 0);
+    signal Puntos1_out_int, Puntos2_out_int, Puntos3_out_int, Puntos4_out_int : std_logic_vector (1 downto 0);
     -- instanciamos los distintos bloques 
     component Bloque1 is
     port(
@@ -309,7 +308,7 @@ begin
     -- instanciación del FMS
     fms_inst : fms
     Port map ( clk => clk,
-               reset => reset, -- aquí seguramente tengamos que meter el boton1
+               reset => botonesf(1), -- aquí seguramente tengamos que meter el boton1
                estado => estado_fms,
                fin_B1 => fin_B1_int,
                fin_B2 => fin_B2_int,
@@ -323,6 +322,39 @@ begin
                reset_B5 => reset_B5_int
              );
     -- instanciamos el registro
+    registro_inst : Registro
+    port map( clk => clk,
+              reset => botonesf(1),
+              estado_in => estado_fms,
+              num_jug_in => num_jug_in_int,
+              num_jug_out => num_jug_out_int,
+              num_round_in => num_round_in_int,
+              num_round_out => num_round_out_int,
+              NumPiedras1_in => NumPiedras1_in_int,
+              NumPiedras2_in => NumPiedras2_in_int,
+              NumPiedras3_in => NumPiedras3_in_int,
+              NumPiedras4_in => NumPiedras4_in_int,
+              NumPiedras1_out => NumPiedras1_out_int,
+              NumPiedras2_out => NumPiedras2_out_int,
+              NumPiedras3_out => NumPiedras3_out_int,
+              NumPiedras4_out => NumPiedras4_out_int,
+              Apuesta1_in => Apuesta1_in_int,
+              Apuesta2_in => Apuesta2_in_int,
+              Apuesta3_in => Apuesta3_in_int,
+              Apuesta4_in => Apuesta4_in_int,
+              Apuesta1_out => Apuesta1_out_int,
+              Apuesta2_out => Apuesta2_out_int,
+              Apuesta3_out => Apuesta3_out_int,
+              Apuesta4_out => Apuesta4_out_int,
+              Puntos1_in => Puntos1_in_int,
+              Puntos2_in => Puntos2_in_int,
+              Puntos3_in => Puntos3_in_int,
+              Puntos4_in => Puntos4_in_int,
+              Puntos1_out => Puntos1_out_int,
+              Puntos2_out => Puntos2_out_int,
+              Puntos3_out => Puntos3_out_int,
+              Puntos4_out => Puntos4_out_int
+    );
 
     -- instanciamos los bloques principales
     -- instanciación del bloque 1
