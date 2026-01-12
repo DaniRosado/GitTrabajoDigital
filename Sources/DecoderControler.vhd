@@ -7,7 +7,7 @@ entity DecoderControler is
          reset  :   in  std_logic;
 
          long_mensaje_in  : in  std_logic_vector(19 downto 0); 
-         long_mensaje_out : out std_logic_vector( 6 downto 0);
+         short_mensaje_out : out std_logic_vector( 6 downto 0);
          selector_7s : out std_logic_vector( 3 downto 0)    --7 segmentos a actualizar
          );
 end entity;
@@ -22,10 +22,10 @@ architecture behavoural of DecoderControler is
     signal   counter   : integer range 0 to 125000 := 0;
     constant MAX_COUNT : integer := 125000;
 
-    signal text_7s_0   :   std_logic_vector( 6 downto 0);     --Salida del 7s [0]
-    signal text_7s_1   :   std_logic_vector( 6 downto 0);     --Salida del 7s [1]
-    signal text_7s_2   :   std_logic_vector( 6 downto 0);     --Salida del 7s [2]
-    signal text_7s_3   :   std_logic_vector( 6 downto 0);     --Salida del 7s [3]
+    signal text_7s_0   :   std_logic_vector( 6 downto 0);   --Salida del 7s [0]
+    signal text_7s_1   :   std_logic_vector( 6 downto 0);   --Salida del 7s [1]
+    signal text_7s_2   :   std_logic_vector( 6 downto 0);   --Salida del 7s [2]
+    signal text_7s_3   :   std_logic_vector( 6 downto 0);   --Salida del 7s [3]
     signal selector_int : std_logic_vector( 3 downto 0);    --Selector para saber que 7s se va a actualizar
     
 begin
@@ -63,16 +63,16 @@ begin
                 counter <= 0;
                 case selector_int is
                     when "0001" =>                          --Actualizar 7s[1]
-                        long_mensaje_out <= text_7s_0;
+                        short_mensaje_out <= text_7s_0;
                         selector_int <= "0010";
                     when "0010" =>                          --Actualizar 7s[2]
-                        long_mensaje_out <= text_7s_1;
+                        short_mensaje_out <= text_7s_1;
                         selector_int <= "0100";
                     when "0100" =>                          --Actualizar 7s[3]
-                        long_mensaje_out <= text_7s_2;
+                        short_mensaje_out <= text_7s_2;
                         selector_int <= "1000";
                     when others =>                          --Actualizar 7s[0]
-                        long_mensaje_out <= text_7s_3;
+                        short_mensaje_out <= text_7s_3;
                         selector_int <= "0001";
                 end case;
             else
