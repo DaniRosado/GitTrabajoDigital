@@ -23,16 +23,15 @@ architecture Behavioral of Antirrebotes is
 begin
     process(clk)
     begin
-
         if clk'event and clk = '1' then
-            Q1 <= boton;
-            Q2 <= Q1;
-            Q3 <= Q2;
-        else
             if reset = '1' then
                 Q1 <= '0';
                 Q2 <= '0';
                 Q3 <= '0'; 
+            else
+                Q1 <= boton;
+                Q2 <= Q1;
+                Q3 <= Q2;
             end if;
         end if;
     end process;
@@ -63,14 +62,14 @@ begin
     filtrado <= '1' when (ESTADO = S_BOTON and Q2 = '1' and T = '1') else '0';
     E <= '1' when ESTADO = S_BOTON else '0';
     
-    Temporizador : process(clk, reset)
+    Temporizador : process(clk)
     begin
+
         if clk'event and clk = '1' then
             if reset = '1' then
                 contador <= 0; 
                 T <= '0';
             else
-        
                 if E = '1' then
                     if contador < max_count-1 then 
                         contador <= contador + 1;
