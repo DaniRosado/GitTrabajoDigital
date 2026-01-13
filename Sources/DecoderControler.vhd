@@ -1,12 +1,20 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use work.estados_pkg.all;
 
 
 entity DecoderControler is
     port(clk    :   in  std_logic;
          reset  :   in  std_logic;
 
-         long_mensaje_in  : in  std_logic_vector(19 downto 0); 
+         estado_in  :   in  estados;
+
+         long_mensaje1_in  : in  std_logic_vector(19 downto 0);
+         long_mensaje2_in  : in  std_logic_vector(19 downto 0);
+         long_mensaje3_in  : in  std_logic_vector(19 downto 0);
+         long_mensaje4_in  : in  std_logic_vector(19 downto 0);
+         long_mensaje5_in  : in  std_logic_vector(19 downto 0); 
+
          segments : out std_logic_vector( 6 downto 0);      -- Salida para el display de 7 segmentos
          selector : out std_logic_vector( 3 downto 0)       -- Selector para saber que 7s se va a actualizar
          );
@@ -22,6 +30,7 @@ architecture behavoural of DecoderControler is
     signal   counter   : integer range 0 to 125000 := 0;
     constant MAX_COUNT : integer := 125000;
 
+    signal long_mensaje_int : std_logic_vector(19 downto 0);
     signal text_7s_0   :   std_logic_vector( 6 downto 0);      -- Salida del 7s [0]
     signal text_7s_1   :   std_logic_vector( 6 downto 0);      -- Salida del 7s [1]
     signal text_7s_2   :   std_logic_vector( 6 downto 0);      -- Salida del 7s [2]
@@ -32,22 +41,22 @@ begin
 
 Decoder3: Decoder7s
     port map(
-        mensaje_in => long_mensaje_in(19 downto 15),
+        mensaje_in => long_mensaje_int(19 downto 15),
         mensaje_out  => text_7s_3
     );
 Decoder2: Decoder7s
     port map(
-        mensaje_in => long_mensaje_in(14 downto 10),
+        mensaje_in => long_mensaje_int(14 downto 10),
         mensaje_out  => text_7s_2
     );
 Decoder1: Decoder7s
     port map(
-        mensaje_in => long_mensaje_in(9 downto 5),
+        mensaje_in => long_mensaje_int(9 downto 5),
         mensaje_out  => text_7s_1
     );
 Decoder0: Decoder7s
     port map(
-        mensaje_in => long_mensaje_in(4 downto 0),
+        mensaje_in => long_mensaje_int(4 downto 0),
         mensaje_out  => text_7s_0
     );
 
@@ -78,6 +87,19 @@ begin
             else
                 counter <= counter + 1;
             end if;
+        case estado_in is
+            when SJug =>
+                long_mensaje_int <= long_mensaje1_in;
+            when ExtPied =>
+                long_mensaje_int <= long_mensaje2_in;
+            when IntrApuesta =>
+                long_mensaje_int <= long_mensaje3_in;
+            when ResRonda =>
+                long_mensaje_int <= long_mensaje4_in;
+            when FinJug =>
+                long_mensaje_int <= long_mensaje5_in;
+        end case;
+
         end if;
     end if;
 end process;

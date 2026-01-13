@@ -25,7 +25,6 @@ end Top;
 
 architecture Behavioral of Top is
 
-
     --||ANTIREBOTES||--
     component Antirrebotes is
     Port (  clk      : in  std_logic;
@@ -65,14 +64,24 @@ architecture Behavioral of Top is
     port(clk    :   in  std_logic;
          reset  :   in  std_logic;
 
-         long_mensaje_in  : in  std_logic_vector(19 downto 0); 
+         estado_in  :   in  estados;
 
-         segments : out std_logic_vector( 6 downto 0);  -- Salida para el display de 7 segmentos
-         selector : out std_logic_vector( 3 downto 0)   -- Selector para saber que 7s se va a actualizar
+         long_mensaje1_in  : in  std_logic_vector(19 downto 0);
+         long_mensaje2_in  : in  std_logic_vector(19 downto 0);
+         long_mensaje3_in  : in  std_logic_vector(19 downto 0);
+         long_mensaje4_in  : in  std_logic_vector(19 downto 0);
+         long_mensaje5_in  : in  std_logic_vector(19 downto 0); 
+
+         segments : out std_logic_vector( 6 downto 0);      -- Salida para el display de 7 segmentos
+         selector : out std_logic_vector( 3 downto 0)       -- Selector para saber que 7s se va a actualizar
          );
     end component;
     -- señales internas del decodercontroler
-    signal long_mensaje_in_int : std_logic_vector(19 downto 0);
+    signal long_mensaje1_in_int : std_logic_vector(19 downto 0);
+    signal long_mensaje2_in_int : std_logic_vector(19 downto 0);
+    signal long_mensaje3_in_int : std_logic_vector(19 downto 0);
+    signal long_mensaje4_in_int : std_logic_vector(19 downto 0);
+    signal long_mensaje5_in_int : std_logic_vector(19 downto 0);
 
     --||FMS||--
     component fms is
@@ -142,7 +151,6 @@ architecture Behavioral of Top is
     );
     end component;
     -- señales internas del registro
-    signal estado_in_int : estados;
     signal num_jug_in_int, num_jug_out_int : std_logic_vector (3 downto 0);
     signal num_round_in_int : std_logic;
     signal num_round_out_int : unsigned (7 downto 0);
@@ -316,7 +324,12 @@ begin
     decodercontroler_inst : DecoderControler
     port map( clk => clk,
               reset => reset,
-              long_mensaje_in => long_mensaje_in_int,
+              estado_in => estado_fms,
+              long_mensaje1_in => long_mensaje1_in_int,
+              long_mensaje2_in => long_mensaje2_in_int,
+              long_mensaje3_in => long_mensaje3_in_int,
+              long_mensaje4_in => long_mensaje4_in_int,
+              long_mensaje5_in => long_mensaje5_in_int,
               segments => segments,
               selector => selector
             );
@@ -382,7 +395,7 @@ begin
               fdiv_fin => fdiv_out_int,
               fdiv_reset => fdiv_reset_int,
               fin_fase => fin_B1_int,
-              seven_segments => long_mensaje_in_int,
+              seven_segments => long_mensaje1_in_int,
               num_jug => num_jug_in_int
     );
     -- instanciación del bloque 2
@@ -397,7 +410,7 @@ begin
               btn_confirm => botonesf(0),
               fdiv_fin => fdiv_out_int,
               fdiv_reset => fdiv_reset_int,
-              segments7 => long_mensaje_in_int,
+              segments7 => long_mensaje2_in_int,
               R_NumPiedras1 => NumPiedras1_in_int,
               R_NumPiedras2 => NumPiedras2_in_int,
               R_NumPiedras3 => NumPiedras3_in_int,
@@ -416,7 +429,7 @@ begin
               btn_confirm => botonesf(0),
               fdiv_fin => fdiv_out_int,
               fdiv_reset => fdiv_reset_int,
-              segments7 => long_mensaje_in_int,
+              segments7 => long_mensaje3_in_int,
               leds => leds_int,
               R_Apuesta1 => Apuesta1_in_int,
               R_Apuesta2 => Apuesta2_in_int,
@@ -445,7 +458,7 @@ begin
                R_Puntos2 => Puntos2_in_int,
                R_Puntos3 => Puntos3_in_int,
                R_Puntos4 => Puntos4_in_int,
-               segments7 => long_mensaje_in_int,
+               segments7 => long_mensaje4_in_int,
                fin_fase => fin_B4_int
              );
     -- instanciación del bloque 5
@@ -458,7 +471,7 @@ begin
                R_Puntos3 => Puntos3_out_int,
                R_Puntos4 => Puntos4_out_int,
                fin_fase => fin_B5_int,
-               segments7 => long_mensaje_in_int
+               segments7 => long_mensaje5_in_int
              );
     -- hacemos la conexiones correspondientes
     
