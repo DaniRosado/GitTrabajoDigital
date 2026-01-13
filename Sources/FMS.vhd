@@ -7,6 +7,7 @@ entity fms is
     Port (clk : in STD_LOGIC;
           reset : in STD_LOGIC;
           estado_out : out estados;
+          sum_round : out std_logic;
           fin_B1 : in STD_LOGIC;
           fin_B2 : in STD_LOGIC;
           fin_B3 : in STD_LOGIC;
@@ -33,6 +34,7 @@ begin
             reset_B3 <= '1';
             reset_B4 <= '1';
             reset_B5 <= '1';
+            sum_round <= '0';
         elsif clk'event and clk = '1' then
             case estado is
                 when SJug =>
@@ -47,6 +49,7 @@ begin
                         reset_B1 <= '0';
                     end if;
                 when ExtPied =>
+                    sum_round <= '0';
                     if fin_B2 = '1' then
                         reset_B2 <= '1';
                         estado <= IntrApuesta;
@@ -69,6 +72,7 @@ begin
                     end if;
                 when FinJug =>
                     if fin_B5 = '1' then
+                        sum_round <= '1';
                         reset_B5 <= '1';
                         estado <= ExtPied;
                     else
