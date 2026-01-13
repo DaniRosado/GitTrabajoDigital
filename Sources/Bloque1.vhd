@@ -51,61 +51,63 @@ begin
   seven_segments(19 downto 5) <= aux1;
   seven_segments(4 downto 0)  <= aux2;
 
-  process(clk, reset)
+  process(clk)
   begin
-    -- reset=1 => apagado
-    if reset = '1' then
-      num_jug <= "0000";
-      fin_fase <= '0';
-      started <= '0';
 
-      conf_prev  <= '0';
-      conf_pulse <= '0';
-      cont_prev  <= '0';
-      cont_pulse <= '0';
+    if clk'event and clk = '1' then
+          -- reset=1 => apagado
+      if reset = '1' then
+        num_jug <= "0000";
+        fin_fase <= '0';
+        started <= '0';
 
-      -- divisor apagado: reset del divisor a 1
-      fdiv_reset <= '1';
+        conf_prev  <= '0';
+        conf_pulse <= '0';
+        cont_prev  <= '0';
+        cont_pulse <= '0';
 
-    elsif (clk'event and clk = '1') then
-      -- por defecto
-      fin_fase <= '0';
-
-      -- detector de flanco (pulsación) CONFIRM
-      conf_pulse <= btn_confirm and (not conf_prev);
-      conf_prev  <= btn_confirm;
-
-      -- detector de flanco (pulsación) CONTINUE
-      cont_pulse <= btn_continue and (not cont_prev);
-      cont_prev  <= btn_continue;
-
-      -- por defecto: mantener el reset del divisor según started
-      if started = '1' then
-        fdiv_reset <= '0';   -- contando
+        -- divisor apagado: reset del divisor a 1
+        fdiv_reset <= '1';
       else
-        fdiv_reset <= '1';   -- parado
-      end if;
 
-      -- 1) Arranque: solo si NO estamos contando y hay pulsación de CONFIRM + switches válido
-      if started = '0' then
-        if conf_pulse = '1' and
-           (switches = "0010" or switches = "0011" or switches = "0100") then
-          num_jug <= switches;
-          started <= '1';
-          fdiv_reset <= '0';  -- empezamos a contar ya
+        -- por defecto
+        fin_fase <= '0';
+
+        -- detector de flanco (pulsación) CONFIRM
+        conf_pulse <= btn_confirm and (not conf_prev);
+        conf_prev  <= btn_confirm;
+
+        -- detector de flanco (pulsación) CONTINUE
+        cont_pulse <= btn_continue and (not cont_prev);
+        cont_prev  <= btn_continue;
+
+        -- por defecto: mantener el reset del divisor según started
+        if started = '1' then
+          fdiv_reset <= '0';   -- contando
+        else
+          fdiv_reset <= '1';   -- parado
+        end if;
+
+        -- 1) Arranque: solo si NO estamos contando y hay pulsación de CONFIRM + switches válido
+        if started = '0' then
+          if conf_pulse = '1' and
+            (switches = "0010" or switches = "0011" or switches = "0100") then
+            num_jug <= switches;
+            started <= '1';
+            fdiv_reset <= '0';  -- empezamos a contar ya
+          end if;
+        end if;
+
+        -- 2) Fin: solo si estamos contando
+        if started = '1' then
+          -- Fin por tiempo (freq_div_fin) o por CONTINUE (salto de los 5s)
+          if fdiv_fin = '1' or cont_pulse = '1' then
+            fin_fase <= '1';
+            started <= '0';
+            fdiv_reset <= '1';  -- paramos/reseteamos divisor inmediatamente
+          end if;
         end if;
       end if;
-
-      -- 2) Fin: solo si estamos contando
-      if started = '1' then
-        -- Fin por tiempo (freq_div_fin) o por CONTINUE (salto de los 5s)
-        if fdiv_fin = '1' or cont_pulse = '1' then
-          fin_fase <= '1';
-          started <= '0';
-          fdiv_reset <= '1';  -- paramos/reseteamos divisor inmediatamente
-        end if;
-      end if;
-
     end if;
   end process;
 

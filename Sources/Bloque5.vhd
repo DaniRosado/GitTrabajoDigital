@@ -33,7 +33,7 @@ architecture Behavioral of Bloque5 is
 
 begin
 
-  process(clk, reset)
+  process(clk)
   begin
     if clk'event and clk = '1' then
 

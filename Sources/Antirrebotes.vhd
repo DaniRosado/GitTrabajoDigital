@@ -21,16 +21,19 @@ architecture Behavioral of Antirrebotes is
     --constant Max_count: integer := 125000;
     signal contador : integer range 0 to max_count; 
 begin
-    process(clk, reset)
+    process(clk)
     begin
-        if reset = '1' then
-            Q1 <= '0';
-            Q2 <= '0';
-            Q3 <= '0'; 
-        elsif clk'event and clk = '1' then
+
+        if clk'event and clk = '1' then
             Q1 <= boton;
             Q2 <= Q1;
             Q3 <= Q2;
+        else
+            if reset = '1' then
+                Q1 <= '0';
+                Q2 <= '0';
+                Q3 <= '0'; 
+            end if;
         end if;
     end process;
 
