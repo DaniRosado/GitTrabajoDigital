@@ -45,7 +45,6 @@ architecture Behavioral of Bloque3 is
     signal current_bet        : integer range 0 to 15 := 0;
     signal players_processed  : integer range 0 to 4  := 0;
     signal is_valid           : std_logic;
-    signal rng_valid          : std_logic;
     signal leds_int           : std_logic_vector(3 downto 0);
 
     component DecoderLeds is
@@ -88,7 +87,6 @@ begin
 
                         players_processed <= 0;
                         bets_made <= (others => 15);
-                        rng_valid <= '0';
 
                         state <= CALCULAR_TURNO;
 
@@ -112,31 +110,20 @@ begin
                             current_player <= 1;
                     end case;
 
-    state <= ESPERA_INPUT;
+                    state <= ESPERA_INPUT;
                     -- Muestra "APx" y espera entrada
                     when ESPERA_INPUT =>
                         -- segments7: [A][P][Jugador][ ]
                         segments7 <= "01010" & "10110" & std_logic_vector(to_unsigned(current_player, 5)) & "11111";
                         
                         if current_player = 1 then
-                            if rng_valid = '0' then 
-                                current_bet <= to_integer(unsigned(rng_in)) mod 13;
-                            end if;
-                            rng_valid <= '1';
-                            for i in 0 to 3 loop
-                                if bets_made(i) = current_bet then
-                                    rng_valid <= '0';
-                                end if;
-                            end loop;
+                            current_bet <= to_integer(unsigned(rng_in)) mod 13;
 
-                            if current_bet > to_integer(unsigned(num_jug)) * 3 then
-                                rng_valid <= '0';
-                            end if;
-                            
-                            if rng_valid = '1' then
-                                is_valid <= '1';
+                            if not (bets_made(1) = current_bet or bets_made(2) = current_bet or bets_made(3) = current_bet or current_bet > to_integer(unsigned(num_jug)) * 3) then
                                 state <= PRINT_RESULTADO;
+                                is_valid <= '1';
                             end if;
+
                         elsif btn_confirm = '1' then
                             current_bet <= to_integer(unsigned(switches));
                             state <= VALIDAR;
@@ -144,19 +131,13 @@ begin
 
                     -- Valida reglas del juego
                     when VALIDAR =>
-                        is_valid <= '1';
                         -- Regla 1: Rango 0 a 3*Jugadores
-                        if current_bet > to_integer(unsigned(num_jug)) * 3 then
+                        if current_bet > to_integer(unsigned(num_jug)) * 3 or bets_made(0) = current_bet or bets_made(1) = current_bet or bets_made(2) = current_bet or bets_made(3) = current_bet then
                             is_valid <= '0';
+                        else 
+                            is_valid <= '1';
                         end if;
-                        -- Regla 2: No repetida en la ronda
-                        for i in 0 to 3 loop                                                                                            --!!!!!!!!!!
-                            if bets_made(i) = current_bet then
-                                is_valid <= '0';
-                            end if;
-                        end loop;
                         state <= PRINT_RESULTADO;
-
                     -- Muestra APC (Correcto) o APE (Error) durante 5s
                     when PRINT_RESULTADO =>
                         fdiv_reset <= '0'; -- Inicia conteo externo

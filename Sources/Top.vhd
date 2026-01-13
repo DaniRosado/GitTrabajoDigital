@@ -261,10 +261,15 @@ architecture Behavioral of Top is
             R_Apuesta3 : in std_logic_vector (3 downto 0);
             R_Apuesta4 : in std_logic_vector (3 downto 0);
 
-            R_Puntos1 : out std_logic;
-            R_Puntos2 : out std_logic;
-            R_Puntos3 : out std_logic;
-            R_Puntos4 : out std_logic;
+            W_Puntos1 : out std_logic;
+            W_Puntos2 : out std_logic;
+            W_Puntos3 : out std_logic;
+            W_Puntos4 : out std_logic;
+
+            R_Puntos1: in std_logic_vector (1 downto 0);
+            R_Puntos2 : in std_logic_vector (1 downto 0);
+            R_Puntos3 : in std_logic_vector (1 downto 0);
+            R_Puntos4 : in std_logic_vector (1 downto 0);
 
             segments7 : out std_logic_vector(19 downto 0);
             
@@ -470,10 +475,14 @@ begin
                R_Apuesta2 => Apuesta2_out_int,
                R_Apuesta3 => Apuesta3_out_int,
                R_Apuesta4 => Apuesta4_out_int,
-               R_Puntos1 => Puntos1_in_int,
-               R_Puntos2 => Puntos2_in_int,
-               R_Puntos3 => Puntos3_in_int,
-               R_Puntos4 => Puntos4_in_int,
+               W_Puntos1 => Puntos1_in_int,
+               W_Puntos2 => Puntos2_in_int,
+               W_Puntos3 => Puntos3_in_int,
+               W_Puntos4 => Puntos4_in_int,
+               R_puntos1 => Puntos1_out_int,
+               R_puntos2 => Puntos2_out_int,
+               R_puntos3 => Puntos3_out_int,
+               R_puntos4 => Puntos4_out_int,
                segments7 => long_mensaje4_in_int,
                fin_fase => fin_B4_int
              );

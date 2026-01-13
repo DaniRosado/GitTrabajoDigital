@@ -75,7 +75,8 @@ begin
                         if current_player = 1 then
                             current_stone <= to_integer(unsigned(rng_in)) mod 4 ;
                             if not (num_ronda = "00000000" and current_stone = 0) then  -- Primera ronda
-                                state <= VALIDAR;
+                                state <= PRINT_RESULTADO;
+                                is_valid <= '1';
                             end if;
 
                         elsif btn_confirm = '1' then
