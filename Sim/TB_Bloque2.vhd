@@ -13,23 +13,25 @@ architecture Behavioral of TB_Bloque2 is
             clk           : in  std_logic;
             reset         : in  std_logic;
             
-            NUM_JUGADORES : in  std_logic_vector (3 downto 0);  -- "0010"(2), "0011"(3), "0100"(4)
-            NUM_RONDA     : in  unsigned (7 downto 0);          -- Ronda actual
-            ALEATORIO_IN  : in  std_logic_vector (5 downto 0);
-            SWITCHES      : in  std_logic_vector (3 downto 0);
-            BTN_CONFIRM   : in  std_logic;
-            BTN_CONTINUAR : in  std_logic;
+            num_jug : in  std_logic_vector (3 downto 0);  -- "0010"(2), "0011"(3), "0100"(4)
+            num_ronda     : in  unsigned (7 downto 0);          -- Ronda actual
+            rng_in  : in  std_logic_vector (5 downto 0);
 
-            freqdiv_end   : in  std_logic;                     
+            switches      : in  std_logic_vector (3 downto 0);
+            btn_continue : in  std_logic;
+            btn_confirm   : in  std_logic;
 
-            freqdiv_reset : out std_logic;
+            fdiv_fin   : in  std_logic;                     
+            fdiv_reset : out std_logic;
+
             segments7     : out std_logic_vector (19 downto 0);
-            PIEDRAS_P1           : out std_logic_vector (3 downto 0);
-            PIEDRAS_P2           : out std_logic_vector (3 downto 0); 
-            PIEDRAS_P3           : out std_logic_vector (3 downto 0); 
-            PIEDRAS_P4           : out std_logic_vector (3 downto 0); 
 
-            FIN_FASE : out std_logic
+            R_NumPiedras1           : out std_logic_vector (3 downto 0);
+            R_NumPiedras2           : out std_logic_vector (3 downto 0); 
+            R_NumPiedras3           : out std_logic_vector (3 downto 0); 
+            R_NumPiedras4           : out std_logic_vector (3 downto 0); 
+
+            fin_fase : out std_logic
         );
     end component;
 
@@ -40,23 +42,25 @@ architecture Behavioral of TB_Bloque2 is
     signal clk_tb           : std_logic;
     signal reset_tb         : std_logic;
     
-    signal NUM_JUGADORES_tb : std_logic_vector (3 downto 0);  -- "0010"(2), "0011"(3), "0100"(4)
-    signal NUM_RONDA_tb     : unsigned (7 downto 0);          -- Ronda actual
-    signal ALEATORIO_IN_tb  : std_logic_vector (5 downto 0);
-    signal SWITCHES_tb      : std_logic_vector (3 downto 0);
-    signal BTN_CONFIRM_tb   : std_logic;
-    signal BTN_CONTINUAR_tb : std_logic;
+    signal num_jug_tb : std_logic_vector (3 downto 0);  -- "0010"(2), "0011"(3), "0100"(4)
+    signal num_ronda_tb     : unsigned (7 downto 0);          -- Ronda actual
+    signal rng_tb  : std_logic_vector (5 downto 0);
 
-    signal freqdiv_end_tb   : std_logic;                     
+    signal switches_tb      : std_logic_vector (3 downto 0);
+    signal btn_continue_tb : std_logic;
+    signal btn_confirm_tb   : std_logic;
 
-    signal freqdiv_reset_tb : std_logic;
+    signal fdiv_fin_tb   : std_logic;                     
+    signal fdiv_reset_tb : std_logic;
+
     signal segments7_tb     : std_logic_vector (19 downto 0);
-    signal PIEDRAS_P1_tb           : std_logic_vector (3 downto 0);
-    signal PIEDRAS_P2_tb           : std_logic_vector (3 downto 0); 
-    signal PIEDRAS_P3_tb           : std_logic_vector (3 downto 0); 
-    signal PIEDRAS_P4_tb           : std_logic_vector (3 downto 0);
 
-    signal FIN_FASE_tb : std_logic;
+    signal R_NumPiedras1_tb           : std_logic_vector (3 downto 0);
+    signal R_NumPiedras2_tb           : std_logic_vector (3 downto 0); 
+    signal R_NumPiedras3_tb           : std_logic_vector (3 downto 0); 
+    signal R_NumPiedras4_tb           : std_logic_vector (3 downto 0);
+
+    signal fin_fase_tb : std_logic;
 
 begin
 
@@ -71,26 +75,28 @@ begin
 
     uut: Bloque2
         port map (
-                clk          => clk_tb,         
-                reset        => reset_tb,       
+                clk     => clk_tb,         
+                reset   => reset_tb,       
                 
-                NUM_JUGADORES => NUM_JUGADORES_tb,
-                NUM_RONDA    => NUM_RONDA_tb,
-                ALEATORIO_IN => ALEATORIO_IN_tb, 
-                SWITCHES      => SWITCHES_tb,
-                BTN_CONFIRM   => BTN_CONFIRM_tb,
-                BTN_CONTINUAR => BTN_CONTINUAR_tb,
+                num_jug     => num_jug_tb,
+                num_ronda   => num_ronda_tb,
+                rng_in      => rng_tb,
 
-                freqdiv_end   => freqdiv_end_tb,                 
+                switches        => switches_tb,
+                btn_confirm     => btn_confirm_tb,
+                btn_continue    => btn_continue_tb,
 
-                freqdiv_reset => freqdiv_reset_tb,
-                segments7     => segments7_tb,
-                PIEDRAS_P1    => PIEDRAS_P1_tb,
-                PIEDRAS_P2    => PIEDRAS_P2_tb,
-                PIEDRAS_P3    => PIEDRAS_P3_tb,
-                PIEDRAS_P4    => PIEDRAS_P4_tb,
+                fdiv_fin    => fdiv_fin_tb,                 
+                fdiv_reset  => fdiv_reset_tb,
 
-                FIN_FASE    => FIN_FASE_tb
+                segments7   => segments7_tb,
+
+                R_NumPiedras1   => R_NumPiedras1_tb,
+                R_NumPiedras2   => R_NumPiedras2_tb,
+                R_NumPiedras3   => R_NumPiedras3_tb,
+                R_NumPiedras4   => R_NumPiedras4_tb,
+
+                fin_fase    => fin_fase_tb
         );
 
 
@@ -106,62 +112,62 @@ begin
                     -- 2 PLAYERS TEST --
                     --------------------
 
-        NUM_JUGADORES_tb <= "0010"; -- 2 players
+        num_jug_tb <= "0010"; -- 2 players
 
         --############### Round 0 ###############--
 
-        NUM_RONDA_tb <= to_unsigned(0, 8);
+        num_ronda_tb <= to_unsigned(0, 8);
 
-        ALEATORIO_IN_tb <= "000101";    --RNG=5  [Bet of 1]  [R0:P1]
+        rng_tb <= "000101";    --RNG=5  [Bet of 1]  [R0:P1]
 
         wait for clk_period * 50;
 
-        freqdiv_end_tb <= '1';          -- End of 5s
+        fdiv_fin_tb <= '1';          -- End of 5s
         wait for clk_period;
-        freqdiv_end_tb <= '0';
+        fdiv_fin_tb <= '0';
         wait for clk_period * 10;
 
         --------------------------------------------
 
-        SWITCHES_tb <= "0111";          -- 7 [Bet of 7] [R0:P2]
+        switches_tb <= "0111";          -- 7 [Bet of 7] [R0:P2]
 
         wait for clk_period*10;
 
-        BTN_CONFIRM_tb <= '1';          -- Press confirm
+        btn_confirm_tb <= '1';          -- Press confirm
         wait for clk_period;
-        BTN_CONFIRM_tb <= '0';
+        btn_confirm_tb <= '0';
 
 
         wait for clk_period * 50;
 
-        freqdiv_end_tb <= '1';          -- End of 5s
+        fdiv_fin_tb <= '1';          -- End of 5s
         wait for clk_period;
-        freqdiv_end_tb <= '0';
+        fdiv_fin_tb <= '0';
         wait for clk_period * 10;
 
         --------------------------------------------
 
-        SWITCHES_tb <= "0011";          -- [Bet of 3]   [R0:P2]
+        switches_tb <= "0011";          -- [Bet of 3]   [R0:P2]
 
         wait for clk_period*10;
 
-        BTN_CONFIRM_tb <= '1';          -- Press confirm
+        btn_confirm_tb <= '1';          -- Press confirm
         wait for clk_period;
-        BTN_CONFIRM_tb <= '0';
+        btn_confirm_tb <= '0';
 
 
         wait for clk_period * 50;
 
-        freqdiv_end_tb <= '1';          -- End of 5s
+        fdiv_fin_tb <= '1';          -- End of 5s
         wait for clk_period;
-        freqdiv_end_tb <= '0';
+        fdiv_fin_tb <= '0';
         wait for clk_period * 10;
 
         --------------------------------------------
 
 
         --############### Round 1 ###############--
-        NUM_RONDA_tb <= to_unsigned(1, 8);
+        num_ronda_tb <= to_unsigned(1, 8);
         wait for clk_period * 2;
 
         -- Reset the UUT
@@ -171,69 +177,69 @@ begin
 
         --------------------------------------------
 
-        ALEATORIO_IN_tb <= "000110";    -- RNG=6 [Bet of 2]   [R1:P1]
+        rng_tb <= "000110";    -- RNG=6 [Bet of 2]   [R1:P1]
     
         wait for clk_period*50;
 
-        freqdiv_end_tb <= '1';      -- End of 5s
+        fdiv_fin_tb <= '1';      -- End of 5s
         wait for clk_period;
-        freqdiv_end_tb <= '0';
+        fdiv_fin_tb <= '0';
         wait for clk_period * 10;
         --------------------------------------------
 
-        SWITCHES_tb <= "0000";    -- [Bet of 0]   [R1:P2]
+        switches_tb <= "0000";    -- [Bet of 0]   [R1:P2]
 
         wait for clk_period*10;
 
-        BTN_CONFIRM_tb <= '1';     -- Press confirm
+        btn_confirm_tb <= '1';     -- Press confirm
         wait for clk_period;
-        BTN_CONFIRM_tb <= '0';
+        btn_confirm_tb <= '0';
 
         wait for clk_period * 50;
 
-        freqdiv_end_tb <= '1';      -- End of 5s
+        fdiv_fin_tb <= '1';      -- End of 5s
         wait for clk_period;
-        freqdiv_end_tb <= '0';
+        fdiv_fin_tb <= '0';
 
         --------------------------------------------
 
         --############### Round 2 ###############--
-        NUM_RONDA_tb <= to_unsigned(2, 8);
+        num_ronda_tb <= to_unsigned(2, 8);
         wait for clk_period * 2;
 
         -- Reset the UUT
         reset_tb <= '1';
         wait for clk_period;
-        ALEATORIO_IN_tb <= "010001";    -- RNG=17 [Bet of 1]   [R2:P1]
+        rng_tb <= "010001";    -- RNG=17 [Bet of 1]   [R2:P1]
         reset_tb <= '0';
 
 
 
-        ALEATORIO_IN_tb <= "010001";    -- RNG=17 [Bet of 1]   [R2:P1]
+        rng_tb <= "010001";    -- RNG=17 [Bet of 1]   [R2:P1]
 
 
         wait for clk_period * 50;
 
-        freqdiv_end_tb <= '1';      -- End of 5s
+        fdiv_fin_tb <= '1';      -- End of 5s
         wait for clk_period;
-        freqdiv_end_tb <= '0';
+        fdiv_fin_tb <= '0';
         wait for clk_period * 100;
 
         --------------------------------------------
 
-        SWITCHES_tb <= "0010";    -- [Bet of 2]   [R2:P2]
+        switches_tb <= "0010";    -- [Bet of 2]   [R2:P2]
 
         wait for clk_period*10;
 
-        BTN_CONFIRM_tb <= '1';     -- Press confirm
+        btn_confirm_tb <= '1';     -- Press confirm
         wait for clk_period;
-        BTN_CONFIRM_tb <= '0';
+        btn_confirm_tb <= '0';
     
         wait for clk_period * 50;
 
-        freqdiv_end_tb <= '1';      -- End of 5s
+        fdiv_fin_tb <= '1';      -- End of 5s
         wait for clk_period;
-        freqdiv_end_tb <= '0';
+        fdiv_fin_tb <= '0';
         wait for clk_period * 10;
 
         --------------------------------------------

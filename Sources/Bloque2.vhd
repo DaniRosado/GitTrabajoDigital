@@ -13,12 +13,12 @@ entity Bloque2 is
 
         switches        : in  std_logic_vector (3 downto 0);
         btn_continue    : in  std_logic;
-        btn_confirm   : in  std_logic;
+        btn_confirm     : in  std_logic;
 
-        fdiv_fin   : in  std_logic;                         -- Pulso de fin de 5s
-        fdiv_reset : out std_logic;
+        fdiv_fin    : in  std_logic;                         -- Pulso de fin de 5s
+        fdiv_reset  : out std_logic;
 
-        segments7     : out std_logic_vector (19 downto 0); -- 4 dígitos x 5 bits
+        segments7   : out std_logic_vector (19 downto 0); -- 4 dígitos x 5 bits
 
         R_NumPiedras1   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J1
         R_NumPiedras2   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J2
@@ -36,12 +36,12 @@ architecture Behavioral of Bloque2 is
     signal state : state_type;
 
     -- Registro interno de apuestas para evitar duplicados 
-    type stone_storage is array (0 to 3) of integer range 0 to 3;
+    type stone_storage is array (0 to 3) of unsigned(1 downto 0);
     signal stones_introduced : stone_storage;
     
-    signal current_player     : integer range 1 to 4;
-    signal current_stone      : integer range 0 to 3;
-    signal is_valid           : std_logic;
+    signal current_player   : integer range 1 to 4;
+    signal current_stone    : integer range 0 to 3;
+    signal is_valid         : std_logic;
 
 
 begin
@@ -132,8 +132,8 @@ begin
         end if;
     end process;
 
-    R_NumPiedras1 <= std_logic_vector(to_unsigned(stones_introduced(0), 2));
-    R_NumPiedras2 <= std_logic_vector(to_unsigned(stones_introduced(1), 2));
-    R_NumPiedras3 <= std_logic_vector(to_unsigned(stones_introduced(2), 2));
-    R_NumPiedras4 <= std_logic_vector(to_unsigned(stones_introduced(3), 2));
+    R_NumPiedras1 <= std_logic_vector(stones_introduced(0), 2);
+    R_NumPiedras2 <= std_logic_vector(stones_introduced(1), 2);
+    R_NumPiedras3 <= std_logic_vector(stones_introduced(2), 2);
+    R_NumPiedras4 <= std_logic_vector(stones_introduced(3), 2);
 end Behavioral;
