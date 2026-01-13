@@ -30,18 +30,18 @@ architecture Behavioral of TB_Bloque1 is
   signal clk_tb   : std_logic := '0';
   signal reset_tb : std_logic := '1'; -- apagado al inicio
 
-  signal btn_confirm_tb        : std_logic := '0';
-  signal btn_continue_tb       : std_logic := '0';
+  signal btn_confirm_tb   : std_logic := '0';
+  signal btn_continue_tb  : std_logic := '0';
 
-  signal switches_tb       : std_logic_vector(3 downto 0) := "0000";
+  signal switches_tb    : std_logic_vector(3 downto 0) := "0000";
 
-  signal fdiv_fin_tb   : std_logic := '0';
-  signal fdiv_reset_tb : std_logic;
+  signal fdiv_fin_tb    : std_logic := '0';
+  signal fdiv_reset_tb  : std_logic;
   
-  signal seven_segments_tb : std_logic_vector(19 downto 0);
-  signal num_jug_tb            : std_logic_vector(3 downto 0);
+  signal seven_segments_tb  : std_logic_vector(19 downto 0);
+  signal num_jug_tb         : std_logic_vector(3 downto 0);
   
-  signal fin_fase_tb            : std_logic;
+  signal fin_fase_tb  : std_logic;
 
 begin
 
