@@ -95,6 +95,7 @@ architecture Behavioral of Top is
     Port (clk : in STD_LOGIC;
           reset : in STD_LOGIC;
           estado_out : out estados;
+          sum_round : out std_logic;
           fin_B1 : in STD_LOGIC;
           fin_B2 : in STD_LOGIC;
           fin_B3 : in STD_LOGIC;
@@ -352,6 +353,7 @@ begin
     Port map ( clk => clk,
                reset => Megareset, -- aquí seguramente tengamos que meter el boton1
                estado_out => estado_fms,
+               sum_round => num_round_in_int,
                fin_B1 => fin_B1_int,
                fin_B2 => fin_B2_int,
                fin_B3 => fin_B3_int,
