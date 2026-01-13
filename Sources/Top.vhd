@@ -7,22 +7,27 @@ use work.estados_pkg.all;
 entity Top is
     Port ( clk : in STD_LOGIC;
            reset : in STD_LOGIC; -- de la FPGA
-           leds_4 : out STD_LOGIC_VECTOR (3 downto 0);
-           botones : in STD_LOGIC_VECTOR (3 downto 0);
+
+           leds_4 : out STD_LOGIC_VECTOR (3 downto 0); --Placa rosa
+           leds_8 : out STD_LOGIC_VECTOR (7 downto 0); --Placa negra
+
+           botones  : in STD_LOGIC_VECTOR (3 downto 0);
            selector : out STD_LOGIC_VECTOR (3 downto 0);
            segments : out STD_LOGIC_VECTOR (6 downto 0);
-           leds_8 : out STD_LOGIC_VECTOR (7 downto 0);
+
            switches : in STD_LOGIC_VECTOR (3 downto 0)           
            );
 end Top;
 
--- comentario de los botones
+-- Distribución de botones:
 -- boton 0: CONFIRMACIÓN
 -- boton 1: REINICIO
 -- boton 2: CONTINUAR
 
 architecture Behavioral of Top is
-    -- componentes de filtrado y auxiliares
+
+
+    --||ANTIREBOTES||--
     component Antirrebotes is
     Port (  clk      : in  std_logic;
             reset    : in  std_logic;
@@ -31,18 +36,22 @@ architecture Behavioral of Top is
             filtrado : out std_logic
             );
     end component;
-    -- señales internas de los antirrebotes
+    -- señales internas para los botones filtrados (outputs)
     signal botonesf : STD_LOGIC_VECTOR (3 downto 0);
-    -- Freqdiv
+
+
+    --||FREQDIV||--
     component Freqdiv is
     Port (  clk    :  in  std_logic;
             reset  :  in  std_logic;
 
             fdiv_out :  out std_logic);
     end component;
+
     -- señales internas del freqdiv
     signal fdiv_reset_int, fdiv_out_int : std_logic;
-    -- RNG
+
+    --||RNG||--
     component RNG_Generator is
     Port ( clk     : in  STD_LOGIC;
            reset   : in  STD_LOGIC; --Reset de la placa
@@ -51,42 +60,45 @@ architecture Behavioral of Top is
     end component;
     -- señales internas del RNG
     signal rng_out_int : STD_LOGIC_VECTOR (5 downto 0);
-    -- Controlador de los leds
+
+    --||DECODER CONTROLER||--
     component DecoderControler is
-    port(   clk    :   in  std_logic;
-            reset  :   in  std_logic;
+    port(clk    :   in  std_logic;
+         reset  :   in  std_logic;
 
-            long_mensaje_in  : in  std_logic_vector(19 downto 0); 
+         long_mensaje_in  : in  std_logic_vector(19 downto 0); 
 
-            segments : out std_logic_vector( 6 downto 0);      -- Salida para el display de 7 segmentos
-            selector : out std_logic_vector( 3 downto 0)       -- Selector para saber que 7s se va a actualizar
+         segments : out std_logic_vector( 6 downto 0);  -- Salida para el display de 7 segmentos
+         selector : out std_logic_vector( 3 downto 0)   -- Selector para saber que 7s se va a actualizar
          );
     end component;
     -- señales internas del decodercontroler
     signal long_mensaje_in_int : std_logic_vector(19 downto 0);
 
-    -- FMS
+    --||FMS||--
     component fms is
-    Port (  clk : in STD_LOGIC;
-            reset : in STD_LOGIC;
-            estado_out : out estados;
-            fin_B1 : in STD_LOGIC;
-            fin_B2 : in STD_LOGIC;
-            fin_B3 : in STD_LOGIC;
-            fin_B4 : in STD_LOGIC;
-            fin_B5 : in STD_LOGIC;
-            reset_B1 : out STD_LOGIC;
-            reset_B2 : out STD_LOGIC;
-            reset_B3 : out STD_LOGIC;
-            reset_B4 : out STD_LOGIC;
-            reset_B5 : out STD_LOGIC
+    Port (clk : in STD_LOGIC;
+          reset : in STD_LOGIC;
+          estado_out : out estados;
+          fin_B1 : in STD_LOGIC;
+          fin_B2 : in STD_LOGIC;
+          fin_B3 : in STD_LOGIC;
+          fin_B4 : in STD_LOGIC;
+          fin_B5 : in STD_LOGIC;
+          reset_B1 : out STD_LOGIC;
+          reset_B2 : out STD_LOGIC;
+          reset_B3 : out STD_LOGIC;
+          reset_B4 : out STD_LOGIC;
+          reset_B5 : out STD_LOGIC
            );
     end component;
     -- señales internas del fms
     signal estado_fms : estados;
     signal fin_B1_int, fin_B2_int, fin_B3_int, fin_B4_int, fin_B5_int : STD_LOGIC;
     signal reset_B1_int, reset_B2_int, reset_B3_int, reset_B4_int, reset_B5_int : STD_LOGIC;
-    -- instanciamos registro 
+
+
+    --||REGISTRO||--
     component Registro is
     Port (clk : in STD_LOGIC;
           reset : in STD_LOGIC;
@@ -141,24 +153,25 @@ architecture Behavioral of Top is
     signal Apuesta1_out_int, Apuesta2_out_int, Apuesta3_out_int, Apuesta4_out_int : std_logic_vector (3 downto 0);
     signal Puntos1_in_int, Puntos2_in_int, Puntos3_in_int, Puntos4_in_int : std_logic;
     signal Puntos1_out_int, Puntos2_out_int, Puntos3_out_int, Puntos4_out_int : std_logic_vector (1 downto 0);
-    -- instanciamos los distintos bloques 
+    
+    --||BLOQUES PRINCIPALES||-- 
     component Bloque1 is
     port(
         clk            : in  std_logic;
         reset          : in  std_logic;  -- 1 = apagado (estado inicial), 0 = funcionando
 
-        btn_confirm        : in  std_logic;  -- boton CONFIRMACION (elige nº jugadores)
-        btn_continue       : in  std_logic;  -- boton CONTINUAR (salta los 5s)
+        btn_confirm    : in  std_logic;  -- boton CONFIRMACION (elige nº jugadores)
+        btn_continue   : in  std_logic;  -- boton CONTINUAR (salta los 5s)
 
-        switches       : in  std_logic_vector(3 downto 0);
-        fdiv_fin   : in  std_logic;
-        fdiv_reset : out std_logic;  -- Va al reset del FreqDiv: 1=reset(parado), 0=contando
-        fin_fase            : out std_logic;
+        switches    : in  std_logic_vector(3 downto 0);
+        fdiv_fin    : in  std_logic;
+        fdiv_reset  : out std_logic;  -- Va al reset del FreqDiv: 1=reset(parado), 0=contando
+        fin_fase       : out std_logic;
         seven_segments : out std_logic_vector(19 downto 0);
-        num_jug            : out std_logic_vector(3 downto 0)
+        num_jug        : out std_logic_vector(3 downto 0)
     );
     end component;
-    -- definimos las señales internas del bloque 1
+
     component Bloque2 is
     port (
         clk     : in  std_logic;
@@ -185,6 +198,7 @@ architecture Behavioral of Top is
         fin_fase : out std_logic
     );
     end component;
+
     component Bloque3 is
     Port (
         clk     : in  std_logic;
@@ -202,7 +216,7 @@ architecture Behavioral of Top is
         fdiv_reset  : out std_logic;
 
         segments7   : out std_logic_vector (19 downto 0); -- 4 dígitos x 5 bits
-        leds        : out std_logic_vector (3 downto 0);  -- Barra de LEDs
+        leds        : out std_logic_vector (11 downto 0);  -- Barra de LEDs
 
         R_Apuesta1  : out std_logic_vector (3 downto 0);  -- Apuesta al registro J1
         R_Apuesta2  : out std_logic_vector (3 downto 0);  -- Apuesta al registro J2
@@ -212,6 +226,9 @@ architecture Behavioral of Top is
         fin_fase : out std_logic                       -- Fin de fase
     );
     end component;
+
+    signal leds_int : STD_LOGIC_VECTOR (11 downto 0);
+
     component Bloque4 is
     Port (  clk : in STD_LOGIC;
             reset : in STD_LOGIC;
@@ -239,6 +256,7 @@ architecture Behavioral of Top is
             fin_fase : out std_logic
            );
     end component;
+
     component Bloque5 is
     Port(
             clk           : in  std_logic;
@@ -260,34 +278,34 @@ begin
     -- instanciamos todos los componentes que se van a usar
     -- instanciación de los antirrebotes para los botones
     antirrebotes_B1 : Antirrebotes
-    Port map ( clk => clk,
-               reset => reset,
-               boton => botones(0),
-               filtrado => botonesf(0)
+    Port map (clk => clk,
+              reset => reset,
+              boton => botones(0),
+              filtrado => botonesf(0)
             );
     antirrebotes_B2 : Antirrebotes
-    Port map ( clk => clk,
-               reset => reset,
-               boton => botones(1),
-               filtrado => botonesf(1)
+    Port map (clk => clk,
+              reset => reset,
+              boton => botones(1),
+              filtrado => botonesf(1)
             );
     antirrebotes_B3 : Antirrebotes
-    Port map ( clk => clk,
-               reset => reset,
-               boton => botones(2),
-               filtrado => botonesf(2)
+    Port map (clk => clk,
+              reset => reset,
+              boton => botones(2),
+              filtrado => botonesf(2)
             );
     antirrebotes_B4 : Antirrebotes
-    Port map ( clk => clk,
-               reset => reset,
-               boton => botones(3),
-               filtrado => botonesf(3)
+    Port map (clk => clk,
+              reset => reset,
+              boton => botones(3),
+              filtrado => botonesf(3)
             );
     --- instanciación del freqdiv
     freqdiv_inst : Freqdiv
-    Port map ( clk => clk,
-               reset => fdiv_reset_int,
-               fdiv_out => fdiv_out_int
+    Port map (clk => clk,
+              reset => fdiv_reset_int,
+              fdiv_out => fdiv_out_int
              );
     -- instanciación del RNG
     rng_inst : RNG_Generator
@@ -400,13 +418,16 @@ begin
               fdiv_fin => fdiv_out_int,
               fdiv_reset => fdiv_reset_int,
               segments7 => long_mensaje_in_int,
-              leds => leds_4,
+              leds => leds_int,
               R_Apuesta1 => Apuesta1_in_int,
               R_Apuesta2 => Apuesta2_in_int,
               R_Apuesta3 => Apuesta3_in_int,
               R_Apuesta4 => Apuesta4_in_int,
               fin_fase => fin_B3_int
     );
+
+    leds_4 <= leds_int(3 downto 0);
+    leds_8 <= leds_int(11 downto 4);
     -- instanciación del bloque 4
     bloque4_inst : Bloque4
     Port map ( clk => clk,

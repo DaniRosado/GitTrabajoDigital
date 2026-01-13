@@ -36,7 +36,7 @@ architecture Behavioral of Bloque2 is
     signal state : state_type;
 
     -- Registro interno de apuestas para evitar duplicados 
-    type stone_storage is array (0 to 3) of unsigned(1 downto 0);
+    type stone_storage is array (0 to 3) of integer range 0 to 3;
     signal stones_introduced : stone_storage;
     
     signal current_player   : integer range 1 to 4;
@@ -132,8 +132,8 @@ begin
         end if;
     end process;
 
-    R_NumPiedras1 <= std_logic_vector(stones_introduced(0), 2);
-    R_NumPiedras2 <= std_logic_vector(stones_introduced(1), 2);
-    R_NumPiedras3 <= std_logic_vector(stones_introduced(2), 2);
-    R_NumPiedras4 <= std_logic_vector(stones_introduced(3), 2);
+    R_NumPiedras1 <= std_logic_vector(to_unsigned(stones_introduced(0), 2));
+    R_NumPiedras2 <= std_logic_vector(to_unsigned(stones_introduced(1), 2));
+    R_NumPiedras3 <= std_logic_vector(to_unsigned(stones_introduced(2), 2));
+    R_NumPiedras4 <= std_logic_vector(to_unsigned(stones_introduced(3), 2));
 end Behavioral;

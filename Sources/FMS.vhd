@@ -5,19 +5,19 @@ use IEEE.NUMERIC_STD.ALL;
 use work.estados_pkg.all;
 
 entity fms is
-    Port (  clk : in STD_LOGIC;
-            reset : in STD_LOGIC;
-            estado_out : out estados;
-            fin_B1 : in STD_LOGIC;
-            fin_B2 : in STD_LOGIC;
-            fin_B3 : in STD_LOGIC;
-            fin_B4 : in STD_LOGIC;
-            fin_B5 : in STD_LOGIC;
-            reset_B1 : out STD_LOGIC;
-            reset_B2 : out STD_LOGIC;
-            reset_B3 : out STD_LOGIC;
-            reset_B4 : out STD_LOGIC;
-            reset_B5 : out STD_LOGIC
+    Port (clk : in STD_LOGIC;
+          reset : in STD_LOGIC;
+          estado_out : out estados;
+          fin_B1 : in STD_LOGIC;
+          fin_B2 : in STD_LOGIC;
+          fin_B3 : in STD_LOGIC;
+          fin_B4 : in STD_LOGIC;
+          fin_B5 : in STD_LOGIC;
+          reset_B1 : out STD_LOGIC;
+          reset_B2 : out STD_LOGIC;
+          reset_B3 : out STD_LOGIC;
+          reset_B4 : out STD_LOGIC;
+          reset_B5 : out STD_LOGIC
            );
 end fms;
 
