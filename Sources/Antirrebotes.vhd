@@ -17,7 +17,7 @@ architecture Behavioral of Antirrebotes is
     type state_type is  (S_NADA, S_BOTON);
     signal ESTADO : StaTe_tYpE;
 
-    constant Max_count: integer := 125;
+    constant Max_count: integer := 25;
     --constant Max_count: integer := 125000;
     signal contador : integer range 0 to max_count; 
 begin

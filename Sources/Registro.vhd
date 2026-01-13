@@ -49,11 +49,11 @@ end entity;
 
 architecture Behavioral of Registro is
 
-    signal num_jug_reg : std_logic_vector (3 downto 0);
-    signal num_round_reg : unsigned (7 downto 0);
-    signal NumPiedras1_reg, NumPiedras2_reg, NumPiedras3_reg, NumPiedras4_reg : std_logic_vector (1 downto 0);
-    signal Apuesta1_reg, Apuesta2_reg, Apuesta3_reg, Apuesta4_reg : std_logic_vector (3 downto 0);
-    signal Puntos1_reg, Puntos2_reg, Puntos3_reg, Puntos4_reg : unsigned (1 downto 0);
+    signal num_jug_reg : std_logic_vector (3 downto 0):= (others => '0');
+    signal num_round_reg : unsigned (7 downto 0) := (others => '0');
+    signal NumPiedras1_reg, NumPiedras2_reg, NumPiedras3_reg, NumPiedras4_reg : std_logic_vector (1 downto 0) := (others => '-');
+    signal Apuesta1_reg, Apuesta2_reg, Apuesta3_reg, Apuesta4_reg : std_logic_vector (3 downto 0) := (others => '1');
+    signal Puntos1_reg, Puntos2_reg, Puntos3_reg, Puntos4_reg : unsigned (1 downto 0) := (others => '0');
 begin
 
     num_jug_out <= num_jug_reg;

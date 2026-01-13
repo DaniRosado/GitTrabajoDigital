@@ -40,14 +40,21 @@ architecture Behavioral of Top is
 
     --||FREQDIV||--
     component Freqdiv is
-    Port (  clk    :  in  std_logic;
-            reset  :  in  std_logic;
+    Port (clk    :  in  std_logic;
 
-            fdiv_out :  out std_logic);
+          estado_in :  in  estados;
+
+          reset1  :  in  std_logic;
+          reset2  :  in  std_logic;
+          reset3  :  in  std_logic;
+          reset4  :  in  std_logic;
+          reset5  :  in  std_logic;
+          
+          fdiv_out :  out std_logic);
     end component;
 
     -- señales internas del freqdiv
-    signal fdiv_reset_int, fdiv_out_int : std_logic;
+    signal fdiv_reset1_int, fdiv_reset2_int, fdiv_reset3_int, fdiv_reset4_int, fdiv_reset5_int, fdiv_out_int : std_logic; 
 
     --||RNG||--
     component RNG_Generator is
@@ -282,6 +289,7 @@ architecture Behavioral of Top is
     end component;
 
 begin
+
     -- instanciamos todos los componentes que se van a usar
     -- instanciación de los antirrebotes para los botones
     antirrebotes_B1 : Antirrebotes
@@ -311,7 +319,12 @@ begin
     --- instanciación del freqdiv
     freqdiv_inst : Freqdiv
     Port map (clk => clk,
-              reset => fdiv_reset_int,
+              estado_in => estado_fms,
+              reset1 => fdiv_reset1_int,
+              reset2 => fdiv_reset2_int,
+              reset3 => fdiv_reset3_int,
+              reset4 => fdiv_reset4_int,
+              reset5 => fdiv_reset5_int,
               fdiv_out => fdiv_out_int
              );
     -- instanciación del RNG
@@ -393,7 +406,7 @@ begin
               btn_continue => botonesf(2),
               switches => switches,
               fdiv_fin => fdiv_out_int,
-              fdiv_reset => fdiv_reset_int,
+              fdiv_reset => fdiv_reset1_int,
               fin_fase => fin_B1_int,
               seven_segments => long_mensaje1_in_int,
               num_jug => num_jug_in_int
@@ -409,7 +422,7 @@ begin
               btn_continue => botonesf(2),
               btn_confirm => botonesf(0),
               fdiv_fin => fdiv_out_int,
-              fdiv_reset => fdiv_reset_int,
+              fdiv_reset => fdiv_reset2_int,
               segments7 => long_mensaje2_in_int,
               R_NumPiedras1 => NumPiedras1_in_int,
               R_NumPiedras2 => NumPiedras2_in_int,
@@ -428,7 +441,7 @@ begin
               btn_continue => botonesf(2),
               btn_confirm => botonesf(0),
               fdiv_fin => fdiv_out_int,
-              fdiv_reset => fdiv_reset_int,
+              fdiv_reset => fdiv_reset3_int,
               segments7 => long_mensaje3_in_int,
               leds => leds_int,
               R_Apuesta1 => Apuesta1_in_int,
@@ -444,7 +457,7 @@ begin
     bloque4_inst : Bloque4
     Port map ( clk => clk,
                reset => reset_B4_int,
-               fdiv_reset => fdiv_reset_int,
+               fdiv_reset => fdiv_reset4_int,
                fdiv_fin => fdiv_out_int,
                R_NumPiedras1 => NumPiedras1_out_int,
                R_NumPiedras2 => NumPiedras2_out_int,

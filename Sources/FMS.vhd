@@ -29,11 +29,11 @@ begin
         if reset = '1' then
             estado <= SJug; -- estado inicial
             -- inicializamos todos los componentes reseteados
-            reset_B1 <= '0';
-            reset_B2 <= '0';
-            reset_B3 <= '0';
-            reset_B4 <= '0';
-            reset_B5 <= '0';
+            reset_B1 <= '1';
+            reset_B2 <= '1';
+            reset_B3 <= '1';
+            reset_B4 <= '1';
+            reset_B5 <= '1';
         elsif clk'event and clk = '1' then
             case estado is
                 when SJug =>
