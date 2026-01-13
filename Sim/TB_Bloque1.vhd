@@ -9,49 +9,58 @@ architecture Behavioral of TB_Bloque1 is
 
   component Bloque1 is
     port(
-      clk            : in  std_logic;
-      reset          : in  std_logic;
+    clk     : in  std_logic;
+    reset   : in  std_logic;  -- 1 = apagado (estado inicial), 0 = funcionando
 
-      confirm        : in  std_logic;
-      continue       : in  std_logic;
+    btn_confirm   : in  std_logic;  -- boton CONFIRMACION (elige nº jugadores)
+    btn_continue  : in  std_logic;  -- boton CONTINUAR (salta los 5s)
 
-      switches       : in  std_logic_vector(3 downto 0);
-      freq_div_fin   : in  std_logic;
-      freq_div_start : out std_logic;
-      Fin            : out std_logic;
-      seven_segments : out std_logic_vector(19 downto 0);
-      Num            : out std_logic_vector(3 downto 0)
+    switches        : in  std_logic_vector(3 downto 0);
+
+    fdiv_fin        : in  std_logic;
+    fdiv_reset      : out std_logic;  -- Va al reset del FreqDiv: 1=reset(parado), 0=contando
+
+    seven_segments  : out std_logic_vector(19 downto 0);
+    num_jug         : out std_logic_vector(3 downto 0);
+
+    fin_fase        : out std_logic
     );
   end component;
 
-  signal clk_tb            : std_logic := '0';
-  signal reset_tb          : std_logic := '1'; -- apagado al inicio
+  signal clk_tb   : std_logic := '0';
+  signal reset_tb : std_logic := '1'; -- apagado al inicio
 
-  signal confirm_tb        : std_logic := '0';
-  signal continue_tb       : std_logic := '0';
+  signal btn_confirm_tb        : std_logic := '0';
+  signal btn_continue_tb       : std_logic := '0';
 
   signal switches_tb       : std_logic_vector(3 downto 0) := "0000";
-  signal freq_div_fin_tb   : std_logic := '0';
 
-  signal freq_div_start_tb : std_logic;
-  signal Fin_tb            : std_logic;
+  signal fdiv_fin_tb   : std_logic := '0';
+  signal fdiv_reset_tb : std_logic;
+  
   signal seven_segments_tb : std_logic_vector(19 downto 0);
-  signal Num_tb            : std_logic_vector(3 downto 0);
+  signal num_jug_tb            : std_logic_vector(3 downto 0);
+  
+  signal fin_fase_tb            : std_logic;
 
 begin
 
   CUT: Bloque1
     port map(
-      clk            => clk_tb,
-      reset          => reset_tb,
-      confirm        => confirm_tb,
-      continue       => continue_tb,
-      switches       => switches_tb,
-      freq_div_fin   => freq_div_fin_tb,
-      freq_div_start => freq_div_start_tb,
-      Fin            => Fin_tb,
-      seven_segments => seven_segments_tb,
-      Num            => Num_tb
+      clk     =>  clk_tb,
+      reset   =>  reset_tb,
+
+      btn_confirm   =>  btn_confirm_tb,
+      btn_continue  =>  btn_continue_tb,
+
+      switches  =>  switches_tb,
+
+      fdiv_fin    =>  fdiv_fin_tb,
+      fdiv_reset  =>  fdiv_reset_tb,
+      
+      seven_segments  =>  seven_segments_tb,
+      num_jug   =>  num_jug_tb,
+      fin_fase  =>  fin_fase_tb
     );
 
   -- Reloj 10 ns
@@ -79,11 +88,11 @@ begin
     wait for 20 ns;
 
     -- Start con CONFIRM (pulsación larga)
-    confirm_tb <= '1'; wait for 60 ns; confirm_tb <= '0';
+    btn_confirm_tb <= '1'; wait for 60 ns; btn_confirm_tb <= '0';
     wait for 200 ns;
 
     -- Saltar (antes de fin) con CONTINUE
-    continue_tb <= '1'; wait for 60 ns; continue_tb <= '0';
+    btn_continue_tb <= '1'; wait for 60 ns; btn_continue_tb <= '0';
     wait for 200 ns;
 
     ----------------------------------------------------------------------
@@ -93,11 +102,11 @@ begin
     wait for 20 ns;
 
     -- Start con CONFIRM
-    confirm_tb <= '1'; wait for 60 ns; confirm_tb <= '0';
+    btn_confirm_tb <= '1'; wait for 60 ns; btn_confirm_tb <= '0';
     wait for 200 ns;
 
     -- Simular que pasaron 5s
-    freq_div_fin_tb <= '1'; wait for 30 ns; freq_div_fin_tb <= '0';
+    fdiv_fin_tb <= '1'; wait for 30 ns; fdiv_fin_tb <= '0';
     wait for 200 ns;
 
     ----------------------------------------------------------------------
@@ -106,7 +115,7 @@ begin
     switches_tb <= "0001";
     wait for 20 ns;
 
-    confirm_tb <= '1'; wait for 60 ns; confirm_tb <= '0';
+    btn_confirm_tb <= '1'; wait for 60 ns; btn_confirm_tb <= '0';
     wait for 200 ns;
 
     wait;
