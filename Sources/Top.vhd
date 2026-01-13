@@ -288,31 +288,32 @@ architecture Behavioral of Top is
         );
     end component;
 
+    signal Megareset : std_logic;
 begin
-
+    Megareset <= reset or botonesf(1); -- reset de la placa o boton de reinicio
     -- instanciamos todos los componentes que se van a usar
     -- instanciación de los antirrebotes para los botones
     antirrebotes_B1 : Antirrebotes
     Port map (clk => clk,
-              reset => reset,
+              reset => Megareset,
               boton => botones(0),
               filtrado => botonesf(0)
             );
     antirrebotes_B2 : Antirrebotes
     Port map (clk => clk,
-              reset => reset,
+              reset => Megareset,
               boton => botones(1),
               filtrado => botonesf(1)
             );
     antirrebotes_B3 : Antirrebotes
     Port map (clk => clk,
-              reset => reset,
+              reset => Megareset,
               boton => botones(2),
               filtrado => botonesf(2)
             );
     antirrebotes_B4 : Antirrebotes
     Port map (clk => clk,
-              reset => reset,
+              reset => Megareset,
               boton => botones(3),
               filtrado => botonesf(3)
             );
@@ -330,13 +331,13 @@ begin
     -- instanciación del RNG
     rng_inst : RNG_Generator
     Port map ( clk => clk,
-               reset => reset,
+               reset => Megareset,
                rng_out => rng_out_int
              );
     -- instanciación del decodercontroler
     decodercontroler_inst : DecoderControler
     port map( clk => clk,
-              reset => reset,
+              reset => Megareset,
               estado_in => estado_fms,
               long_mensaje1_in => long_mensaje1_in_int,
               long_mensaje2_in => long_mensaje2_in_int,
@@ -349,7 +350,7 @@ begin
     -- instanciación del FMS
     fms_inst : fms
     Port map ( clk => clk,
-               reset => botonesf(1), -- aquí seguramente tengamos que meter el boton1
+               reset => Megareset, -- aquí seguramente tengamos que meter el boton1
                estado_out => estado_fms,
                fin_B1 => fin_B1_int,
                fin_B2 => fin_B2_int,
@@ -365,7 +366,7 @@ begin
     -- instanciamos el registro
     registro_inst : Registro
     port map( clk => clk,
-              reset => botonesf(1),
+              reset => Megareset,
               estado_in => estado_fms,
               num_jug_in => num_jug_in_int,
               num_jug_out => num_jug_out_int,
