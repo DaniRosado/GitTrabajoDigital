@@ -2,10 +2,10 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity FinJuegoTB is
-end FinJuegoTB;
+entity Bloque5 is
+end entity;
 
-architecture Behavioral of FinJuegoTB is
+architecture Behavioral of Bloque5 is
 
   signal clk_tb           : std_logic := '0';
   signal reset_tb         : std_logic := '1';
@@ -26,6 +26,7 @@ begin
     port map(
       clk           => clk_tb,
       reset         => reset_tb,
+      
       num_jug => Num_jugadores_tb,
       R_Puntos1            => p1_tb,
       R_Puntos1            => p2_tb,

@@ -4,28 +4,30 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity Bloque1 is
   port(
-    clk            : in  std_logic;
-    reset          : in  std_logic;  -- 1 = apagado (estado inicial), 0 = funcionando
+    clk     : in  std_logic;
+    reset   : in  std_logic;  -- 1 = apagado (estado inicial), 0 = funcionando
 
-    btn_confirm        : in  std_logic;  -- boton CONFIRMACION (elige nº jugadores)
-    btn_continue       : in  std_logic;  -- boton CONTINUAR (salta los 5s)
+    btn_confirm   : in  std_logic;  -- boton CONFIRMACION (elige nº jugadores)
+    btn_continue  : in  std_logic;  -- boton CONTINUAR (salta los 5s)
 
-    switches       : in  std_logic_vector(3 downto 0);
-    fdiv_fin   : in  std_logic;
-    fdiv_reset : out std_logic;  -- Va al reset del FreqDiv: 1=reset(parado), 0=contando
-    fin_fase            : out std_logic;
-    seven_segments : out std_logic_vector(19 downto 0);
-    num_jug            : out std_logic_vector(3 downto 0)
+    switches        : in  std_logic_vector(3 downto 0);
 
+    fdiv_fin        : in  std_logic;
+    fdiv_reset      : out std_logic;  -- Va al reset del FreqDiv: 1=reset(parado), 0=contando
+
+    seven_segments  : out std_logic_vector(19 downto 0);
+    num_jug         : out std_logic_vector(3 downto 0);
+
+    fin_fase        : out std_logic
   );
 end entity;
 
 architecture Behavioral of Bloque1 is
 
-  signal aux1       : std_logic_vector(14 downto 0);
-  signal aux2       : std_logic_vector(4 downto 0);
+  signal aux1   : std_logic_vector(14 downto 0);
+  signal aux2   : std_logic_vector(4 downto 0);
 
-  signal started    : std_logic;  -- 1 mientras el divisor está contando (fdiv_reset=0)
+  signal started  : std_logic;  -- 1 mientras el divisor está contando (fdiv_reset=0)
 
   -- detector de flanco para CONFIRM
   signal conf_prev  : std_logic := '0';

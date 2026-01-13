@@ -8,5 +8,12 @@ Antirrebotes
 RNG_generator
 Freqdiv
 
-
 Stage_package
+
+
+
+Bloque 1: quitar Antirrebotes implicito
+Bloque 2:
+Bloque 3:
+Bloque 4:
+Bloque 5:

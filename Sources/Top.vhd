@@ -145,7 +145,7 @@ architecture Behavioral of Top is
     component Bloque1 is
     port(
         clk            : in  std_logic;
-        reset          : in  std_logic;  -- 1 = apagado (estado inicial), 0 = funcionando
+        reset TB_Bloque1  : in  std_logic;  -- 1 = apagado (estado inicial), 0 = funcionando
 
         btn_confirm        : in  std_logic;  -- boton CONFIRMACION (elige nº jugadores)
         btn_continue       : in  std_logic;  -- boton CONTINUAR (salta los 5s)
@@ -326,7 +326,7 @@ begin
               estado_in => estado_fms,
               num_jug_in => num_jug_in_int,
               num_jug_out => num_jug_out_int,
-              num_round_in => num_round_in_int,
+              num_rTB_Bloque1 => num_round_in_int,
               num_round_out => num_round_out_int,
               NumPiedras1_in => NumPiedras1_in_int,
               NumPiedras2_in => NumPiedras2_in_int,
