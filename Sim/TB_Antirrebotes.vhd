@@ -34,7 +34,7 @@ BEGIN
 	-- Instantiate the Unit Under Test (UUT)
    uut: Antirrebotes PORT MAP (
           clk => clk,
-			 reset => reset,
+		  reset => reset,
           boton => boton,
           filtrado => filtrado
    );

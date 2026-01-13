@@ -39,21 +39,24 @@ begin
 
     flanco <= not Q3 and Q2;
     
-    FMS : process(clk, reset)
+    FMS : process(clk)
     begin
-        if(reset = '1') then
-            ESTADO <= S_NADA;
-        elsif clk'event and clk = '1' then
-            case ESTADO is 
-                when S_NADA =>
-                    if flanco = '1' and T = '0' then
-                        ESTADO <= S_BOTON;
-                    end if;
-                when S_BOTON =>
-                    if (T = '1') then
-                        ESTADO <= S_NADA;
-                    end if;
-             end case;                                    
+        if clk'event and clk = '1' then
+            if(reset = '1') then
+                ESTADO <= S_NADA;
+            else
+                case ESTADO is 
+                    when S_NADA =>
+                        if flanco = '1' and T = '0' then
+                            ESTADO <= S_BOTON;
+                        end if;
+                    when S_BOTON =>
+                        if (T = '1') then
+                            ESTADO <= S_NADA;
+                        end if;
+                end case;
+
+             end if;                                    
         end if;
     end process;
 
@@ -62,17 +65,20 @@ begin
     
     Temporizador : process(clk, reset)
     begin
-        if reset = '1' then
-            contador <= 0; 
-            T <= '0';
-        elsif clk'event and clk = '1' then
-            if E = '1' then
-                if contador < max_count-1 then 
-                    contador <= contador + 1;
-                    T <= '0';
-                else
-                    contador <= 0;
-                    T <= '1';
+        if clk'event and clk = '1' then
+            if reset = '1' then
+                contador <= 0; 
+                T <= '0';
+            else
+        
+                if E = '1' then
+                    if contador < max_count-1 then 
+                        contador <= contador + 1;
+                        T <= '0';
+                    else
+                        contador <= 0;
+                        T <= '1';
+                    end if;
                 end if;
             end if;
         end if;
