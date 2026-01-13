@@ -53,7 +53,7 @@ begin
             fin_s <= '0';
             pulsoflag <= '0';
             winner <= "00100";
-            segments7 <= "11010" & "11010" & "11010" & "11010"; -- en reset apagamos todos los displays
+            segments7 <= "11111" & "11111" & "11111" & "11111"; -- en reset apagamos todos los displays
         else
     
             case estado is
@@ -68,7 +68,7 @@ begin
                         fdiv_reset <= '0';
                     end if;
                 when MostrarTotPiedaras =>
-                    segments7 <= (19 downto 4 => '0') & TotalApuestas;
+                    segments7 <= (19 downto 4 => '1') & TotalApuestas;
                     --transición de estado
                     if fdiv_fin = '1' then
                         fdiv_reset <= '1';
@@ -86,7 +86,7 @@ begin
                     end if;
                 when MostrarGanador =>
                     -- lógica del estado
-                    segments7 <= "10010" & "01010" & "11010" & winner;
+                    segments7 <= "10010" & "01010" & "11111" & winner;
                     if R_Apuesta1 = TotalApuestas then
                         winner <= "00001";
                         if pulsoflag = '0' then

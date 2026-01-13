@@ -20,7 +20,7 @@ end Freqdiv;
 
 architecture Behavioral of Freqdiv is
 
-    constant max_count : integer := 5*125000000/1000000 -1;
+    constant max_count : integer := 5*125000000 -1;
     -- constant max_count : integer := 20; -- Para simulación rápida
     signal count : integer range 0 to max_count := 0 ;
 

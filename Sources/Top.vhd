@@ -452,8 +452,8 @@ begin
               fin_fase => fin_B3_int
     );
 
-    leds_4 <= leds_int(3 downto 0);
-    leds_8 <= leds_int(11 downto 4);
+    leds_4 <= leds_int(11 downto 8);
+    leds_8 <= leds_int(7 downto 0);
     -- instanciación del bloque 4
     bloque4_inst : Bloque4
     Port map ( clk => clk,

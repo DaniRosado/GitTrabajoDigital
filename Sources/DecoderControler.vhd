@@ -72,16 +72,16 @@ begin
                 counter <= 0;
                 case selector_int is
                     when "0001" =>                          --Actualizar 7s[1]
-                        segments <= "0000000";
+                        segments <= text_7s_1;
                         selector_int <= "0010";
                     when "0010" =>                          --Actualizar 7s[2]
-                        segments <= "0000000";
+                        segments <= text_7s_2;
                         selector_int <= "0100";
                     when "0100" =>                          --Actualizar 7s[3]
-                        segments <= "0000000";
+                        segments <= text_7s_3;
                         selector_int <= "1000";
                     when others =>                          --Actualizar 7s[0]
-                        segments <= "0000000";
+                        segments <= text_7s_0;
                         selector_int <= "0001";
                 end case;
             else
