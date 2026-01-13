@@ -23,7 +23,7 @@ architecture Behavioral of TB_Top is
     signal leds_8_tb : STD_LOGIC_VECTOR (7 downto 0);
 
     constant clk_period : time := 10 ns;
-    constant wait_bot_conf : time := 10 ns; 
+    constant wait_bot_conf : time := 30 * clk_period; 
     constant wait_screen_time : time := 25 * clk_period;
     constant wait_before_presing : time := 4 * clk_period;
 
