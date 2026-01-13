@@ -5,30 +5,34 @@ use IEEE.NUMERIC_STD.ALL;
 entity TB_Bloque3 is
 end entity;
 
-architecture Behavioral of TB_Bloque3 is
+architecture Behavioral of TB_Bloque3 is    
 
     -- Component Declaration for the Unit Under Test (UUT)
     component Bloque3
         port (
-            clk           : in  std_logic;
-            reset         : in  std_logic;
-            continue      : in  std_logic;
-            confirm       : in  std_logic;
-            switches      : in  std_logic_vector (3 downto 0);
-            player_number : in  std_logic_vector (3 downto 0); -- "0010"(2), "0011"(3), "0100"(4)
-            freqdiv_end   : in  std_logic;                     -- Pulso de fin de 5s
-            round         : in  unsigned (7 downto 0); -- Ronda actual
-            rng           : in  std_logic_vector (5 downto 0);
-            
-            freqdiv_reset : out std_logic;
-            segments7     : out std_logic_vector (19 downto 0); -- 4 dígitos x 5 bits
-            leds          : out std_logic_vector (3 downto 0);  -- Barra de LEDs
-            ap1           : out std_logic_vector (3 downto 0);  -- Apuesta al registro J1
-            ap2           : out std_logic_vector (3 downto 0);  -- Apuesta al registro J2
-            ap3           : out std_logic_vector (3 downto 0);  -- Apuesta al registro J3
-            ap4           : out std_logic_vector (3 downto 0);  -- Apuesta al registro J4
+        clk     : in  std_logic;
+        reset   : in  std_logic;
+        
+        num_jug     : in  std_logic_vector (3 downto 0); -- "0010"(2), "0011"(3), "0100"(4)
+        num_ronda   : in  unsigned (7 downto 0); -- Ronda actual
+        rng_in      : in  std_logic_vector (5 downto 0);
+        
+        switches    : in  std_logic_vector (3 downto 0);
+        btn_continue    : in  std_logic;
+        btn_confirm     : in  std_logic;
 
-            end_inserting : out std_logic                       -- Fin de fase
+        fdiv_fin    : in  std_logic;                     -- Pulso de fin de 5s
+        fdiv_reset  : out std_logic;
+
+        segments7   : out std_logic_vector (19 downto 0); -- 4 dígitos x 5 bits
+        leds        : out std_logic_vector (11 downto 0);  -- Barra de LEDs
+
+        R_Apuesta1  : out std_logic_vector (3 downto 0);  -- Apuesta al registro J1
+        R_Apuesta2  : out std_logic_vector (3 downto 0);  -- Apuesta al registro J2
+        R_Apuesta3  : out std_logic_vector (3 downto 0);  -- Apuesta al registro J3
+        R_Apuesta4  : out std_logic_vector (3 downto 0);  -- Apuesta al registro J4
+
+        fin_fase : out std_logic                       -- Fin de fase
         );
     end component;
 
@@ -37,23 +41,28 @@ architecture Behavioral of TB_Bloque3 is
     -- Signals to connect to UUT
     signal clk_tb           : std_logic := '0';
     signal reset_tb         : std_logic := '0';
-    signal continue_tb      : std_logic := '0';
-    signal confirm_tb       : std_logic := '0';
-    signal switches_tb      : std_logic_vector (3 downto 0);
-    signal player_number_tb : std_logic_vector (3 downto 0);
-    signal freqdiv_end_tb   : std_logic := '0';
-    signal round_tb         : unsigned (7 downto 0);
-    signal rng_tb           : std_logic_vector (5 downto 0);
-    
-    signal freqdiv_reset_tb : std_logic;
-    signal segments7_tb     : std_logic_vector (19 downto 0);
-    signal leds_tb          : std_logic_vector (3 downto 0);
-    signal ap1_tb           : std_logic_vector (3 downto 0);
-    signal ap2_tb           : std_logic_vector (3 downto 0);
-    signal ap3_tb           : std_logic_vector (3 downto 0);
-    signal ap4_tb           : std_logic_vector (3 downto 0);
 
-    signal end_inserting_tb : std_logic;
+    signal num_jug_tb : std_logic_vector (3 downto 0);
+    signal num_ronda_tb         : unsigned (7 downto 0);
+    signal rng_tb           : std_logic_vector (5 downto 0);
+
+    signal switches_tb      : std_logic_vector (3 downto 0);
+    signal btn_continue_tb      : std_logic := '0';
+    signal btn_confirm_tb       : std_logic := '0';
+
+    signal fdiv_fin_tb   : std_logic := '0';
+    signal fdiv_reset_tb : std_logic;
+
+    signal segments7_tb     : std_logic_vector (19 downto 0);
+    signal leds_tb          : std_logic_vector (11 downto 0);
+
+    signal R_Apuesta1_tb           : std_logic_vector (3 downto 0);
+    signal R_Apuesta2_tb           : std_logic_vector (3 downto 0);
+    signal R_Apuesta3_tb           : std_logic_vector (3 downto 0);
+    signal R_Apuesta4_tb           : std_logic_vector (3 downto 0);
+
+    signal fin_fase_tb : std_logic;
+
 
 
 
@@ -70,25 +79,29 @@ end process;
 
 uut: Bloque3
     port map (
-        clk           => clk_tb,
-        reset         => reset_tb,
-        continue      => continue_tb,
-        confirm       => confirm_tb,
-        switches      => switches_tb,
-        player_number => player_number_tb,
-        freqdiv_end   => freqdiv_end_tb,
-        round         => round_tb,
-        rng           => rng_tb,
+        clk     => clk_tb,
+        reset   => reset_tb,
         
-        freqdiv_reset => freqdiv_reset_tb,
-        segments7     => segments7_tb,
-        leds          => leds_tb,
-        ap1           => ap1_tb,
-        ap2           => ap2_tb,
-        ap3           => ap3_tb,
-        ap4           => ap4_tb,
+        num_jug     => num_jug_tb,
+        num_ronda   => num_ronda_tb,
+        rng_in      => rng_tb,
+        
+        switches        => switches_tb,
+        btn_continue    => btn_continue_tb,
+        btn_confirm     => btn_confirm_tb,
 
-        end_inserting => end_inserting_tb
+        fdiv_fin    => fdiv_fin_tb,
+        fdiv_reset  => fdiv_reset_tb,
+
+        segments7  => segments7_tb,
+        leds       => leds_tb,
+
+        R_Apuesta1  => R_Apuesta1_tb,
+        R_Apuesta2  => R_Apuesta2_tb,
+        R_Apuesta3  => R_Apuesta3_tb,
+        R_Apuesta4  => R_Apuesta4_tb,
+
+        fin_fase => fin_fase_tb
     );
 
 tb : process
@@ -102,19 +115,19 @@ begin
                 -- 2 PLAYERS TEST --
                 --------------------
 
-    player_number_tb <= "0010"; -- 2 players
+    num_jug_tb <= "0010"; -- 2 players
 
     --############### Round 0 ###############--
 
-    round_tb <= to_unsigned(0, 8);
+    num_ronda_tb <= to_unsigned(0, 8);
 
     rng_tb <= "000101";         --RNG=5  [Bet of 1]  [R0:P1]
 
     wait for clk_period * 50;
 
-    freqdiv_end_tb <= '1';      -- End of 5s
+    fdiv_fin_tb <= '1';      -- End of 5s
     wait for clk_period;
-    freqdiv_end_tb <= '0';
+    fdiv_fin_tb <= '0';
     wait for clk_period * 10;
 
     --------------------------------------------
@@ -123,16 +136,16 @@ begin
 
     wait for clk_period*10;
 
-    confirm_tb <= '1';          -- Press confirm
+    btn_confirm_tb <= '1';          -- Press confirm
     wait for clk_period;
-    confirm_tb <= '0';
+    btn_confirm_tb <= '0';
 
 
     wait for clk_period * 50;
 
-    freqdiv_end_tb <= '1';      -- End of 5s
+    fdiv_fin_tb <= '1';      -- End of 5s
     wait for clk_period;
-    freqdiv_end_tb <= '0';
+    fdiv_fin_tb <= '0';
     wait for clk_period * 10;
 
     --------------------------------------------
@@ -141,23 +154,23 @@ begin
 
     wait for clk_period*10;
 
-    confirm_tb <= '1';          -- Press confirm
+    btn_confirm_tb <= '1';          -- Press confirm
     wait for clk_period;
-    confirm_tb <= '0';
+    btn_confirm_tb <= '0';
 
 
     wait for clk_period * 50;
 
-    freqdiv_end_tb <= '1';      -- End of 5s
+    fdiv_fin_tb <= '1';      -- End of 5s
     wait for clk_period;
-    freqdiv_end_tb <= '0';
+    fdiv_fin_tb <= '0';
     wait for clk_period * 10;
 
     --------------------------------------------
 
 
     --############### Round 1 ###############--
-    round_tb <= to_unsigned(1, 8);
+    num_ronda_tb <= to_unsigned(1, 8);
     wait for clk_period * 2;
 
     -- Reset the UUT
@@ -171,15 +184,15 @@ begin
 
     wait for clk_period*10;
 
-    confirm_tb <= '1';          -- Press confirm
+    btn_confirm_tb <= '1';          -- Press confirm
     wait for clk_period;
-    confirm_tb <= '0';
+    btn_confirm_tb <= '0';
 
     wait for clk_period * 50;
 
-    freqdiv_end_tb <= '1';      -- End of 5s
+    fdiv_fin_tb <= '1';      -- End of 5s
     wait for clk_period;
-    freqdiv_end_tb <= '0';
+    fdiv_fin_tb <= '0';
 
     --------------------------------------------
 
@@ -187,15 +200,15 @@ begin
  
     wait for clk_period*50;
 
-    freqdiv_end_tb <= '1';      -- End of 5s
+    fdiv_fin_tb <= '1';      -- End of 5s
     wait for clk_period;
-    freqdiv_end_tb <= '0';
+    fdiv_fin_tb <= '0';
     wait for clk_period * 10;
 
     --------------------------------------------
 
     --############### Round 2 ###############--
-    round_tb <= to_unsigned(2, 8);
+    num_ronda_tb <= to_unsigned(2, 8);
     wait for clk_period * 2;
 
     -- Reset the UUT
@@ -210,9 +223,9 @@ begin
 
     wait for clk_period * 50;
 
-    freqdiv_end_tb <= '1';      -- End of 5s
+    fdiv_fin_tb <= '1';      -- End of 5s
     wait for clk_period;
-    freqdiv_end_tb <= '0';
+    fdiv_fin_tb <= '0';
     wait for clk_period * 100;
 
     --------------------------------------------
@@ -221,15 +234,15 @@ begin
 
     wait for clk_period*10;
 
-    confirm_tb <= '1';          -- Press confirm
+    btn_confirm_tb <= '1';          -- Press confirm
     wait for clk_period;
-    confirm_tb <= '0';
+    btn_confirm_tb <= '0';
  
     wait for clk_period * 50;
 
-    freqdiv_end_tb <= '1';      -- End of 5s
+    fdiv_fin_tb <= '1';      -- End of 5s
     wait for clk_period;
-    freqdiv_end_tb <= '0';
+    fdiv_fin_tb <= '0';
     wait for clk_period * 10;
 
     --------------------------------------------

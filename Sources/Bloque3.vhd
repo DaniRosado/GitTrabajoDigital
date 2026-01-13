@@ -19,7 +19,7 @@ entity Bloque3 is
         fdiv_reset  : out std_logic;
 
         segments7   : out std_logic_vector (19 downto 0); -- 4 dígitos x 5 bits
-        leds        : out std_logic_vector (3 downto 0);  -- Barra de LEDs
+        leds        : out std_logic_vector (11 downto 0);  -- Barra de LEDs
 
         R_Apuesta1  : out std_logic_vector (3 downto 0);  -- Apuesta al registro J1
         R_Apuesta2  : out std_logic_vector (3 downto 0);  -- Apuesta al registro J2
@@ -27,6 +27,7 @@ entity Bloque3 is
         R_Apuesta4  : out std_logic_vector (3 downto 0);  -- Apuesta al registro J4
 
         fin_fase : out std_logic                       -- Fin de fase
+
     );
 end entity;
 
@@ -45,9 +46,20 @@ architecture Behavioral of Bloque3 is
     signal players_processed  : integer range 0 to 4  := 0;
     signal is_valid           : std_logic;
     signal rng_valid          : std_logic;
+    signal leds_int           : std_logic_vector(3 downto 0);
 
+    component DecoderLeds is
+        port(Input  :   in  std_logic_vector(3 downto 0);
+             Leds   :   out std_logic_vector(11 downto 0));
+    end component;
 
 begin
+
+    DecoderLeds_inst : DecoderLeds
+        port map(
+            Input => leds_int,
+            Leds  => leds
+        );
 
 
     process(clk, reset)
@@ -59,7 +71,7 @@ begin
                 
                 fdiv_reset <= '1';
                 segments7 <= (others => '1'); -- Apagar display
-                leds <= (others => '0');
+                leds_int <= (others => '0');
                 R_Apuesta1  <= (others => '1');
                 R_Apuesta2  <=(others => '1');  
                 R_Apuesta3 <= (others => '1');
@@ -138,7 +150,7 @@ begin
                             -- Display: [A][P][ID][C]
                             segments7 <= "01010" & "10110" & std_logic_vector(to_unsigned(current_player, 5)) & "01100";
                             -- Decodificación de barra de LEDs (apuesta)                                                                                                --!!!!!!!!
-                            leds <= std_logic_vector(to_unsigned(current_bet, 4));
+                            leds_int <= std_logic_vector(to_unsigned(current_bet, 4));
                         else
                             -- Display: [A][P][ID][E]
                             segments7 <= "01010" & "10110" & std_logic_vector(to_unsigned(current_player, 5)) & "01110";
