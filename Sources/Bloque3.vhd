@@ -94,11 +94,25 @@ begin
 
                     -- Determina el orden circular
                     when CALCULAR_TURNO =>
-                        -- El primer jugador de la ronda es: (round MOD player_number) + 1
-                        -- Luego sumamos los ya procesados con desplazamiento circular
-                        current_player <= ((to_integer(num_ronda) + players_processed) rem to_integer(unsigned(num_jug))) + 1;              --!!!!!!!!!!
-                        state <= ESPERA_INPUT;
+                    -- Definimos una variable temporal para la suma
+                    -- Asumiendo que has declarado 'v_suma' como variable integer en el proceso
+                    -- O simplemente calculándolo directamente en el case:
 
+                    case num_jug is
+                        when "0010" => -- 2 Jugadores (Divide por 2, muy fácil para la FPGA)
+                            current_player <= ((to_integer(num_ronda) + players_processed) mod 2) + 1;
+                            
+                        when "0011" => -- 3 Jugadores (Vivado ya sabe dividir por la constante 3)
+                            current_player <= ((to_integer(num_ronda) + players_processed) mod 3) + 1;
+                            
+                        when "0100" => -- 4 Jugadores (Divide por 4, muy fácil)
+                            current_player <= ((to_integer(num_ronda) + players_processed) mod 4) + 1;
+                            
+                        when others => -- Caso por defecto (seguridad)
+                            current_player <= 1;
+                    end case;
+
+    state <= ESPERA_INPUT;
                     -- Muestra "APx" y espera entrada
                     when ESPERA_INPUT =>
                         -- segments7: [A][P][Jugador][ ]

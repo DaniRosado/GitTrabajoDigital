@@ -82,6 +82,16 @@ begin
                 num_round_reg <= (others => '0');
 
 
+                NumPiedras1_reg <= (others => '-');
+                NumPiedras2_reg <= (others => '-');
+                NumPiedras3_reg <= (others => '-');
+                NumPiedras4_reg <= (others => '-');
+
+                Apuesta1_reg <= (others => '-');
+                Apuesta2_reg <= (others => '-');
+                Apuesta3_reg <= (others => '-');
+                Apuesta4_reg <= (others => '-');
+
                 Puntos1_reg <= (others => '0');
                 Puntos2_reg <= (others => '0');
                 Puntos3_reg <= (others => '0');
@@ -107,9 +117,8 @@ begin
                         if Puntos4_in = '1' then Puntos4_reg <= Puntos4_reg + 1; end if;
                     when others =>
                         null;
-
-                if num_round_in = '1' then num_round_reg <= num_round_reg + 1; end if;
                 end case;
+                if num_round_in = '1' then num_round_reg <= num_round_reg + 1; end if;
             end if;
         end if;
     end process;
