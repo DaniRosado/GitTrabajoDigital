@@ -42,7 +42,7 @@ architecture Behavioral of Bloque2 is
     signal stones_introduced : stone_storage;
     
     signal current_player   : integer range 1 to 4;
-    signal current_stone    : integer range 0 to 3;
+    signal current_stone    : integer range 0 to 15;
     signal is_valid         : std_logic;
 
 
