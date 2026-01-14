@@ -26,6 +26,7 @@ begin
                 counter <= counter + 1;
             end if;
             rng_out <= std_logic_vector(to_unsigned(counter, 6));
+            --rng_out <= "000000";
         end if;
     end process;
 end Behavioral;

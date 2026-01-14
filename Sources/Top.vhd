@@ -250,6 +250,8 @@ architecture Behavioral of Top is
 
             fdiv_reset : out STD_LOGIC;
             fdiv_fin : in STD_LOGIC;
+
+            R_num_jug     : in  std_logic_vector (3 downto 0);
             
             R_NumPiedras1 : in std_logic_vector (1 downto 0);
             R_NumPiedras2 : in std_logic_vector (1 downto 0);
@@ -466,7 +468,8 @@ begin
     Port map ( clk => clk,
                reset => reset_B4_int,
                fdiv_reset => fdiv_reset4_int,
-               fdiv_fin => fdiv_out_int,
+               fdiv_fin => fdiv_out_int, 
+               R_num_jug => num_jug_out_int,
                R_NumPiedras1 => NumPiedras1_out_int,
                R_NumPiedras2 => NumPiedras2_out_int,
                R_NumPiedras3 => NumPiedras3_out_int,

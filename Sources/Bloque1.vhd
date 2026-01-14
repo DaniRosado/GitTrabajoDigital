@@ -35,7 +35,7 @@ begin
   aux <= "00010" when switches = "0010" else
          "00011" when switches = "0011" else
          "00100" when switches = "0100" else
-         "10100";
+         "10011";  -- _
 
   seven_segments(19 downto 5) <= "100001000110010";
   seven_segments(4 downto 0)  <= aux;

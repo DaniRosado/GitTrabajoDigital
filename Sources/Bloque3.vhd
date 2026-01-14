@@ -34,7 +34,7 @@ end entity;
 architecture Behavioral of Bloque3 is
 
     -- Estados de la FSM
-    type state_type is (INICIO, CALCULAR_TURNO, ESPERA_INPUT, VALIDAR, PRINT_RESULTADO, ST_NEXT_PLAYER, FIN);
+    type state_type is (CALCULAR_TURNO, ESPERA_INPUT, VALIDAR, PRINT_RESULTADO, ST_NEXT_PLAYER, FIN);
     signal state : state_type;
 
     -- Registro interno de apuestas para evitar duplicados 
@@ -69,41 +69,35 @@ begin
             if reset = '1' then
                 
                 fdiv_reset <= '1';
+
                 segments7 <= (others => '1'); -- Apagar display
-                leds_int <= (others => '0');
+                leds_int  <= (others => '0');
+
                 R_Apuesta1  <= (others => '1');
-                R_Apuesta2  <=(others => '1');  
-                R_Apuesta3 <= (others => '1');
-                R_Apuesta4 <= (others => '1');
+                R_Apuesta2  <= (others => '1');  
+                R_Apuesta3  <= (others => '1');
+                R_Apuesta4  <= (others => '1');
+
                 fin_fase <= '0';
+                
+                players_processed <= 0;
+                bets_made <= (others => 15); --Resetear apuestas
 
-                state <= INICIO;
-
+                state <= CALCULAR_TURNO;
             else
                 case state is
 
-                    -- Espera de activación
-                    when INICIO =>
-
-                        players_processed <= 0;
-                        bets_made <= (others => 15);
-
-                        state <= CALCULAR_TURNO;
-
                     -- Determina el orden circular
                     when CALCULAR_TURNO =>
-                    -- Definimos una variable temporal para la suma
-                    -- Asumiendo que has declarado 'v_suma' como variable integer en el proceso
-                    -- O simplemente calculándolo directamente en el case:
 
                     case num_jug is
-                        when "0010" => -- 2 Jugadores (Divide por 2, muy fácil para la FPGA)
+                        when "0010" => -- 2 Jugadores
                             current_player <= ((to_integer(num_ronda) + players_processed) mod 2) + 1;
                             
-                        when "0011" => -- 3 Jugadores (Vivado ya sabe dividir por la constante 3)
+                        when "0011" => -- 3 Jugadores
                             current_player <= ((to_integer(num_ronda) + players_processed) mod 3) + 1;
                             
-                        when "0100" => -- 4 Jugadores (Divide por 4, muy fácil)
+                        when "0100" => -- 4 Jugadores
                             current_player <= ((to_integer(num_ronda) + players_processed) mod 4) + 1;
                             
                         when others => -- Caso por defecto (seguridad)
@@ -111,18 +105,14 @@ begin
                     end case;
 
                     state <= ESPERA_INPUT;
-                    -- Muestra "APx" y espera entrada
                     when ESPERA_INPUT =>
-                        -- segments7: [A][P][Jugador][ ]
+                        -- segments7: [A][P][Jug][ ]
                         segments7 <= "01010" & "10110" & std_logic_vector(to_unsigned(current_player, 5)) & "11111";
                         
                         if current_player = 1 then
                             current_bet <= to_integer(unsigned(rng_in)) mod 13;
-
-                            if not (bets_made(1) = current_bet or bets_made(2) = current_bet or bets_made(3) = current_bet or current_bet > to_integer(unsigned(num_jug)) * 3) then
-                                state <= PRINT_RESULTADO;
-                                is_valid <= '1';
-                            end if;
+                                state <= VALIDAR;
+                                --is_valid <= '1';
 
                         elsif btn_confirm = '1' then
                             current_bet <= to_integer(unsigned(switches));
@@ -132,7 +122,7 @@ begin
                     -- Valida reglas del juego
                     when VALIDAR =>
                         -- Regla 1: Rango 0 a 3*Jugadores
-                        if current_bet > to_integer(unsigned(num_jug)) * 3 or bets_made(0) = current_bet or bets_made(1) = current_bet or bets_made(2) = current_bet or bets_made(3) = current_bet then
+                        if current_bet > to_integer(unsigned(num_jug)) * 3 or bets_made(0) = current_bet or bets_made(1) = current_bet or bets_made(2) = current_bet or bets_made(3) = current_bet or (num_ronda = "00000000" and current_bet = 0) then
                             is_valid <= '0';
                         else 
                             is_valid <= '1';
@@ -152,7 +142,7 @@ begin
                         end if;
 
                         -- Espera fin de 5s o botón continuar
-                        if fdiv_fin = '1' or btn_continue = '1' then
+                        if fdiv_fin = '1' or btn_continue = '1' or (current_player = 1 and is_valid = '0') then
                             fdiv_reset <= '1';
                             if is_valid = '1' then
                                 -- Guardar en registro externo

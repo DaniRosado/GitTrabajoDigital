@@ -66,7 +66,17 @@ begin
             case estado is
                 when MostrarNumPiedras =>
                     --lógica del estado
-                    segments7 <= "000" & R_NumPiedras1 & "000" & R_NumPiedras2 & "000" & R_NumPiedras3 & "000" & R_NumPiedras4;
+                    segments7 (19 downto 10) <= "000" & R_NumPiedras1 & "000" & R_NumPiedras2;
+                    case R_num_jug is
+                        when "0010" => -- 2 Jugadores
+                            segments7 (9 downto 0) <= "11111" & "11111";
+                        when "0011" => -- 3 Jugadores
+                            segments7 (9 downto 0) <= "000" & R_NumPiedras3 & "11111";
+                        when "0100" => -- 4 Jugadores
+                            segments7 (9 downto 0) <= "000" & R_NumPiedras3 & "000" & R_NumPiedras4;
+                        when others =>
+                            segments7 (9 downto 0) <= "11111" & "11111";
+                        end case;   
                     --transición de estado
                     if fdiv_fin = '1' then
                         fdiv_reset <= '1';
@@ -84,7 +94,17 @@ begin
                         fdiv_reset <= '0';
                     end if;
                 when MostrarApuestas =>
-                    segments7 <= "0" & R_Apuesta1 & "0" & R_Apuesta2 & "0" & R_Apuesta3 & "0" & R_Apuesta4;
+                    segments7 (19 downto 10) <= "0" & R_Apuesta1 & "0" & R_Apuesta2;
+                    case R_num_jug is
+                        when "0010" => -- 2 Jugadores
+                            segments7 (9 downto 0) <= "11111" & "11111";
+                        when "0011" => -- 3 Jugadores
+                            segments7 (9 downto 0) <= "0" & R_Apuesta3 & "11111";
+                        when "0100" => -- 4 Jugadores
+                            segments7 (9 downto 0) <= "0" & R_Apuesta3 & "0" & R_Apuesta4;
+                        when others =>
+                            segments7 (9 downto 0) <= "11111" & "11111";
+                        end case;
                     if fdiv_fin = '1' then
                         fdiv_reset <= '1';
                         estado <= MostrarGanador;
@@ -137,7 +157,17 @@ begin
                     end if;
 
                 when MostrarPuntuaciones =>
-                    segments7 <= "000" & R_Puntos1 & "000" & R_Puntos2 & "000" & R_Puntos3 & "000" & R_Puntos4;
+                    segments7 (19 downto 10) <= "000" & R_Puntos1 & "000" & R_Puntos2;
+                    case R_num_jug is
+                        when "0010" => -- 2 Jugadores
+                            segments7 (9 downto 0) <= "11111" & "11111";
+                        when "0011" => -- 3 Jugadores
+                            segments7 (9 downto 0) <= "000" & R_Puntos3 & "11111";
+                        when "0100" => -- 4 Jugadores
+                            segments7 (9 downto 0) <= "000" & R_Puntos3 & "000" & R_Puntos4;
+                        when others =>
+                            segments7 (9 downto 0) <= "11111" & "11111";
+                        end case;
                     if fdiv_fin = '1' then
                         fdiv_reset <= '1';
                         estado <= MostrarNumPiedras;
