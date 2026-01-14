@@ -1,3 +1,5 @@
+-- FMS.vhd: Máquina de estados finita para el control de las fases del juego
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;

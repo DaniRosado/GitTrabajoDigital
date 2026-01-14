@@ -1,3 +1,5 @@
+-- Decoder7s.vhd: Módulo decodificador de 5 bits a 7 segmentos.
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 

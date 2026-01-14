@@ -1,3 +1,5 @@
+--Bloque1.vhd: Módulod para seleccionar nº de jugadores que van a jugar
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -5,14 +7,14 @@ use IEEE.NUMERIC_STD.ALL;
 entity Bloque1 is
   port(
     clk     : in  std_logic;
-    reset   : in  std_logic;  -- 1 = apagado (estado inicial), 0 = funcionando
+    reset   : in  std_logic;
 
     btn_confirm   : in  std_logic;  -- pulso CONFIRMACION (elige nº jugadores)
-    btn_continue  : in  std_logic;  -- pulso CONTINUAR (salta los 5s)
+    btn_continue  : in  std_logic;  -- pulso CONTINUAR    (salta los 5s)
 
     switches        : in  std_logic_vector(3 downto 0);
 
-    fdiv_fin        : in  std_logic;
+    fdiv_fin        : in  std_logic;  --Fin de conteo del FreqDiv
     fdiv_reset      : out std_logic;  -- Va al reset del FreqDiv: 1=reset(parado), 0=contando
  
     seven_segments  : out std_logic_vector(19 downto 0);
@@ -24,22 +26,17 @@ end entity;
 
 architecture Behavioral of Bloque1 is
 
-  signal aux   : std_logic_vector(4 downto 0);
-
   signal started  : std_logic;  -- 1 mientras el divisor está contando (fdiv_reset=0)
 
 begin
 
-
-  -- último display: 2/3/4/_
-  aux <= "00010" when switches = "0010" else
-         "00011" when switches = "0011" else
-         "00100" when switches = "0100" else
-         "10011";  -- _
-
-  seven_segments(19 downto 5) <= "100001000110010";
-  seven_segments(4 downto 0)  <= aux;
-
+  -- 7segments : [J][U][G][2/3/4/_]
+  seven_segments(19 downto 5) <= "100001000110010";                   -- "JUG"
+  
+  seven_segments(4 downto 0) <= "00010" when switches = "0010" else   -- "2"
+                                "00011" when switches = "0011" else   -- "3"        
+                                "00100" when switches = "0100" else   -- "4"
+                                "10011";                              -- "_"
   process(clk)
   begin
 
