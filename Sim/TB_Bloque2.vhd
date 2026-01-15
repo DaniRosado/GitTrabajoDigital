@@ -10,26 +10,26 @@ architecture Behavioral of TB_Bloque2 is
     -- Component Declaration for the Unit Under Test (UUT)
     component Bloque2
         port (
-            clk           : in  std_logic;
-            reset         : in  std_logic;
+            clk     : in  std_logic;
+            reset   : in  std_logic;
             
-            num_jug : in  std_logic_vector (3 downto 0);  -- "0010"(2), "0011"(3), "0100"(4)
-            num_ronda     : in  unsigned (7 downto 0);          -- Ronda actual
-            rng_in  : in  std_logic_vector (5 downto 0);
+            num_jug     : in  std_logic_vector (3 downto 0);    -- "0010"(2), "0011"(3), "0100"(4)
+            num_ronda   : in  unsigned (7 downto 0);            -- Ronda actual
+            rng_in      : in  std_logic_vector (5 downto 0);
 
-            switches      : in  std_logic_vector (3 downto 0);
-            btn_continue : in  std_logic;
-            btn_confirm   : in  std_logic;
+            switches        : in  std_logic_vector (3 downto 0);
+            btn_continue    : in  std_logic;
+            btn_confirm     : in  std_logic;
 
-            fdiv_fin   : in  std_logic;                     
-            fdiv_reset : out std_logic;
+            fdiv_fin    : in  std_logic;                         -- Pulso de fin de 5s
+            fdiv_reset  : out std_logic;
 
-            segments7     : out std_logic_vector (19 downto 0);
+            segments7   : out std_logic_vector (19 downto 0); -- 4 dígitos x 5 bits
 
-            R_NumPiedras1           : out std_logic_vector (3 downto 0);
-            R_NumPiedras2           : out std_logic_vector (3 downto 0); 
-            R_NumPiedras3           : out std_logic_vector (3 downto 0); 
-            R_NumPiedras4           : out std_logic_vector (3 downto 0); 
+            R_NumPiedras1   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J1
+            R_NumPiedras2   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J2
+            R_NumPiedras3   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J3
+            R_NumPiedras4   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J4
 
             fin_fase : out std_logic
         );
