@@ -62,6 +62,7 @@ begin
             reset => reset_tb,
             fdiv_reset => fdiv_reset_tb,
             fdiv_fin => fdiv_fin_tb,
+            btn_continue => '0',
             R_num_jug => R_num_jug_tb,
             R_NumPiedras1 => R_NumPiedras1_tb,
             R_NumPiedras2 => R_NumPiedras2_tb,
