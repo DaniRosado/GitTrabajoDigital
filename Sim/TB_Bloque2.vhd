@@ -26,10 +26,10 @@ architecture Behavioral of TB_Bloque2 is
 
             segments7   : out std_logic_vector (19 downto 0); -- 4 dígitos x 5 bits
 
-            R_NumPiedras1   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J1
-            R_NumPiedras2   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J2
-            R_NumPiedras3   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J3
-            R_NumPiedras4   : out std_logic_vector (1 downto 0);  -- Apuesta al registro J4
+            R_NumPiedras1           : out std_logic_vector (1 downto 0);
+            R_NumPiedras2           : out std_logic_vector (1 downto 0); 
+            R_NumPiedras3           : out std_logic_vector (1 downto 0); 
+            R_NumPiedras4           : out std_logic_vector (1 downto 0); 
 
             fin_fase : out std_logic
         );
@@ -55,10 +55,10 @@ architecture Behavioral of TB_Bloque2 is
 
     signal segments7_tb     : std_logic_vector (19 downto 0);
 
-    signal R_NumPiedras1_tb           : std_logic_vector (3 downto 0);
-    signal R_NumPiedras2_tb           : std_logic_vector (3 downto 0); 
-    signal R_NumPiedras3_tb           : std_logic_vector (3 downto 0); 
-    signal R_NumPiedras4_tb           : std_logic_vector (3 downto 0);
+    signal R_NumPiedras1_tb           : std_logic_vector (1 downto 0);
+    signal R_NumPiedras2_tb           : std_logic_vector (1 downto 0); 
+    signal R_NumPiedras3_tb           : std_logic_vector (1 downto 0); 
+    signal R_NumPiedras4_tb           : std_logic_vector (1 downto 0);
 
     signal fin_fase_tb : std_logic;
 
