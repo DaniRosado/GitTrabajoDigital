@@ -1,3 +1,5 @@
+-- Freqdiv.vhd: Divisor de frecuencia para generar un pulso cada 5 segundos
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;

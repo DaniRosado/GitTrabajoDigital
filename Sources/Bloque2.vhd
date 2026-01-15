@@ -1,3 +1,5 @@
+--Bloque2.vhd: Módulo para la gestión de la fase de introducción de piedras por jugador
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -32,7 +34,7 @@ end entity;
 architecture Behavioral of Bloque2 is
 
     -- Estados de la FSM
-    type state_type is (INICIO, ESPERA_INPUT, VALIDAR, PRINT_RESULTADO, ST_NEXT_PLAYER, FIN);
+    type state_type is (ESPERA_INPUT, VALIDAR, PRINT_RESULTADO, ST_NEXT_PLAYER, FIN);
     signal state : state_type;
 
     -- Registro interno de apuestas para evitar duplicados 
@@ -40,7 +42,7 @@ architecture Behavioral of Bloque2 is
     signal stones_introduced : stone_storage;
     
     signal current_player   : integer range 1 to 4;
-    signal current_stone    : integer range 0 to 3;
+    signal current_stone    : integer range 0 to 15;
     signal is_valid         : std_logic;
 
 
@@ -53,27 +55,23 @@ begin
         if clk'event and clk = '1' then
 
             if reset = '1' then
-                state <= INICIO;
+                state <= ESPERA_INPUT;
                 fin_fase <= '0';
-
+                current_player <= 1;
+                stones_introduced <= (others => 0);
+                fdiv_reset <= '1';
                 segments7 <= (others => '1');   -- Todo apagado
             else
                 case state is
-                    -- Espera de activación
-                    when INICIO =>
-                        fin_fase <= '0';
-                        current_player <= 1;
-                        stones_introduced <= (others => 0);
-                        state <= ESPERA_INPUT;
-                        fdiv_reset <= '1';
+
 
                     -- Muestra "chx" y espera entrada
                     when ESPERA_INPUT =>
-                        -- segments7: [c][h][Jugador][ ]
+                        -- segments7: [c][h][Jug][ ]
                         segments7 <= "10100" & "10101" & std_logic_vector(to_unsigned(current_player, 5)) & "11111";
                         
                         if current_player = 1 then
-                            current_stone <= to_integer(unsigned(rng_in)) mod 4 ;
+                            current_stone <= to_integer(unsigned(rng_in)) mod 4 ;       --Generar número aleatorio entre 0 y 3
                             if not (num_ronda = "00000000" and current_stone = 0) then  -- Primera ronda
                                 state <= PRINT_RESULTADO;
                                 is_valid <= '1';
@@ -98,10 +96,10 @@ begin
                     when PRINT_RESULTADO =>
                         fdiv_reset <= '0'; -- Inicia conteo externo
                         if is_valid = '1' then
-                            -- Display: [c][h][Jugador][C]
+                            -- Display: [c][h][Jug][C]
                             segments7 <= "10100" & "10101" & std_logic_vector(to_unsigned(current_player, 5)) & "01100";
                         else
-                            -- Display: [c][h][Jugador][E]
+                            -- Display: [c][h][Jug][E]
                             segments7 <= "10100" & "10101" & std_logic_vector(to_unsigned(current_player, 5)) & "01110";
                         end if;
 

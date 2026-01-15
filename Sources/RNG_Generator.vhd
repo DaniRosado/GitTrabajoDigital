@@ -1,3 +1,5 @@
+-- RNG_Generator.vhd: Generador de numeros aleatorios basado en un contador de 52
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -26,6 +28,7 @@ begin
                 counter <= counter + 1;
             end if;
             rng_out <= std_logic_vector(to_unsigned(counter, 6));
+            --rng_out <= "000000";
         end if;
     end process;
 end Behavioral;

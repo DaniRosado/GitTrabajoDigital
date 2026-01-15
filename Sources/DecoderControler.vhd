@@ -1,3 +1,5 @@
+--- DecoderControler.vhd: Módulo encargado de decodificar y controlar la salida a los displays de 7 segmentos.
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use work.estados_pkg.all;

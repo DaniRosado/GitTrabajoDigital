@@ -1,3 +1,5 @@
+-- DecoderLeds.vhd: Módulo decodificador de 4 bits a 12 LEDs.
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 

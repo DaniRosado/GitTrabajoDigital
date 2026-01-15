@@ -1,3 +1,5 @@
+--- Bloque5.vhd: Módulo encargado de detectar el ganador de la partida y mostrarlo en el display.
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -35,8 +37,8 @@ begin
 
   process(clk)
   begin
-    if clk'event and clk = '1' then
 
+    if clk'event and clk = '1' then
       if reset = '1' then
         fin_fase <= '0';
         segments7 <= (others => '0');
