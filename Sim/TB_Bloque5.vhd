@@ -2,10 +2,10 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity Bloque5 is
+entity Bloque5TB is
 end entity;
 
-architecture Behavioral of Bloque5 is
+architecture Behavioral of Bloque5TB is
 
   signal clk_tb           : std_logic := '0';
   signal reset_tb         : std_logic := '1';
@@ -16,24 +16,25 @@ architecture Behavioral of Bloque5 is
   signal p3_tb : std_logic_vector(1 downto 0) := "00";
   signal p4_tb : std_logic_vector(1 downto 0) := "00";
 
-  signal repetir_tb : std_logic;
-  signal ganador_tb : std_logic_vector(19 downto 0);
+  signal fin_fase_tb : std_logic;
+  signal segments7_tb : std_logic_vector(19 downto 0);
 
 begin
 
   -- Circuito bajo test
   DUT: entity work.Bloque5
     port map(
-      clk           => clk_tb,
-      reset         => reset_tb,
-      
-      num_jug => Num_jugadores_tb,
-      R_Puntos1            => p1_tb,
-      R_Puntos1            => p2_tb,
-      R_Puntos1            => p3_tb,
-      R_Puntos4            => p4_tb,
-      repetir       => repetir_tb,
-      segments7       => ganador_tb
+      clk       => clk_tb,
+      reset     => reset_tb,
+
+      num_jug   => Num_jugadores_tb,
+      R_Puntos1 => p1_tb,
+      R_Puntos2 => p2_tb,
+      R_Puntos3 => p3_tb,
+      R_Puntos4 => p4_tb,
+
+      fin_fase  => fin_fase_tb,
+      segments7 => segments7_tb
     );
 
   -- Reloj: periodo 10 ns
@@ -85,36 +86,32 @@ begin
     wait for 30 ns;
 
     -- Durante el reset dejamos valores "seguros"
-    -- para que al volver a reset=0 NO gane p1 por error
     p1_tb <= "00";
     p2_tb <= "00";
-    p3_tb <= "11";  -- p3 = 3 (queremos que gane 3 en el siguiente arranque)
-    p4_tb <= "10";  -- p4 = 2 
+    p3_tb <= "11";  -- queremos que gane 3 al salir de reset
+    p4_tb <= "10";
 
-    wait for 10 ns; -- seguimos en reset un poco más
+    wait for 10 ns;
     reset_tb <= '0';
     wait for 60 ns;
 
     ------------------------------------------------
-    -- Ahora cambiamos algo para que no sea siempre el mismo caso
-    -- (opcional)
+    -- Cambiar puntos (opcional)
     ------------------------------------------------
     p3_tb <= "01";
     p4_tb <= "00";
     wait for 60 ns;
 
     ------------------------------------------------
-    -- RESET 3 alrededor de ~400 ns para probar que ahora gana el 4
+    -- RESET 3 para probar que ahora gana el 4
     ------------------------------------------------
     reset_tb <= '1';
     wait for 30 ns;
 
-    -- Preparar el escenario que tú dices:
-    -- p3 = 2 y p4 = 3 cuando quitamos reset
     p1_tb <= "00";
     p2_tb <= "00";
     p3_tb <= "10";
-    p4_tb <= "11";
+    p4_tb <= "11";  -- gana 4
 
     wait for 10 ns;
     reset_tb <= '0';
