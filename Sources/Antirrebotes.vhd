@@ -19,8 +19,8 @@ architecture Behavioral of Antirrebotes is
     type state_type is  (S_NADA, S_BOTON);
     signal ESTADO : state_type;
 
-    -- constant Max_count: integer := 25;   -- Valor para simulacion
-    constant Max_count: integer := 125000;  -- Valor para implementacion en FPGA
+    constant Max_count: integer := 25;   -- Valor para simulacion
+    --constant Max_count: integer := 125000;  -- Valor para implementacion en FPGA
     signal contador : integer range 0 to Max_count; 
 begin
     process(clk) -- Sincronizador
